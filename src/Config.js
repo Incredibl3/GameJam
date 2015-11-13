@@ -1,7 +1,7 @@
 import device;
 
 var CLOUD_SCALE = 0.7;
-var BOX_SCALE = 0.8;
+var BOX_SCALE = 1;
 var TILE_SCALE = 0.8;
 var BUTTON_SCALE = device.width / 576;
 var BG_WIDTH = 576;
@@ -12,8 +12,8 @@ var TILE_HEIGHT = 150 * TILE_SCALE;
 var TILE_VELOCITY = 0.1;
 var TILE_HIT_BOUNDS_MARGIN_X = 10;
 var TILE_HIT_BOUNDS_MARGIN_BOTTOM = 15;
-var BOX_HEIGHT = 400 * BOX_SCALE;
-var BOX_OFFSETY = BG_HEIGHT - BOX_HEIGHT - 0.5 * BOX_HEIGHT;
+var BOX_HEIGHT = 74 * BOX_SCALE;
+var BOX_OFFSETY = BG_HEIGHT - BOX_HEIGHT - BOX_HEIGHT;
 var FALLING_OFFSETY = BOX_OFFSETY + BOX_HEIGHT;
 var PLAYER_OFFSETY_ADJUSTMENT = 50;
 var PLAYER_OFFSETY = BG_HEIGHT / 2 - 550 * PLAYER_SCALE + PLAYER_OFFSETY_ADJUSTMENT;
@@ -44,68 +44,67 @@ exports = {
       {
         name: "ComboImage",
         cls: "ui.ImageView",
-        width: 250,
-        height: 250,
+        width: 149,
+        height: 157,
         x: 0,
         y: 0,
-        image: "resources/images/game/UI/time_icon_0001.png"
+        image: "resources/images/kfc/ICON_Combo_1.png"
       },
       {
         name: "ComboMenu",
         layout: "linear",
         direction: "horizontal",
-        width: 326,
-        height: 200,
-        x: 250,
+        width: 427,
+        height: 157,
+        x: 160,
         y: 0,
         children: [
           {
-            name: "ComboMenu1",
-            cls: "ui.ImageView",
-            width: 80,
-            height: 80,
+            name: "menu0",
+            cls: "src.MenuItem",
+            width: 108,
+            height: 105,
             x: 0,
             y: 0,
-            image: "resources/images/game/UI/time_icon_0001.png"
+            // image: "resources/images/kfc/burger_able.png",
+            // completeImage: "resources/images/kfc/burger_Completed.png",
+            // disabledImage: "resources/images/kfc/burger_disable.png"
           },
           {
-            name: "ComboMenu2",
-            cls: "ui.ImageView",
-            width: 80,
-            height: 80,
+            name: "menu1",
+            cls: "src.MenuItem",
+            width: 108,
+            height: 105,
             x: 0,
             y: 0,
-            image: "resources/images/game/UI/time_icon_0001.png"
+            // image: "resources/images/kfc/potato_able.png",
+            // completeImage: "resources/images/kfc/potato_Completed.png",
+            // disabledImage: "resources/images/kfc/potato_disable.png"
           },
           {
-            name: "ComboMenu3",
-            cls: "ui.ImageView",
-            width: 80,
-            height: 80,
+            name: "menu2",
+            cls: "src.MenuItem",
+            width: 108,
+            height: 105,
             x: 0,
             y: 0,
-            image: "resources/images/game/UI/time_icon_0001.png"
+            // image: "resources/images/kfc/pepsi_able.png",
+            // completeImage: "resources/images/kfc/pepsi_Completed.png",
+            // disabledImage: "resources/images/kfc/pepsi_disable.png"
           },
           {
-            name: "ComboMenu4",
-            cls: "ui.ImageView",
-            width: 80,
-            height: 80,
+            name: "menu3",
+            cls: "src.MenuItem",
+            width: 108,
+            height: 105,
             x: 0,
             y: 0,
-            image: "resources/images/game/UI/time_icon_0001.png"
+            // image: "resources/images/kfc/popcorn_able.png",
+            // completeImage: "resources/images/kfc/popcorn_Completed.png",
+            // disabledImage: "resources/images/kfc/popcorn_disable.png"
           }
         ]       
       },
-      // {
-      //   name: "Timer",
-      //   cls: "ui.ImageView",
-      //   width: 250,
-      //   height: 250,
-      //   x: 0,
-      //   y: 0,
-      //   image: "resources/images/game/UI/time_icon_0001.png"
-      // }      
     ]
   },
   backgroundLayers: [
@@ -126,10 +125,9 @@ exports = {
           y: BG_HEIGHT,
           yAlign: 'bottom',
           height: BG_HEIGHT,
-          image: "resources/images/game/GameScreen/sky_bottom.png" 
+          image: "resources/images/kfc/BG_back.png" 
         },
-        { image: "resources/images/game/GameScreen/sky_top.png" },
-        { image: "resources/images/game/GameScreen/sky_middle.png" }
+        { image: "resources/images/kfc/BG_Tile.png" },
       ]
     },
     {
@@ -145,16 +143,16 @@ exports = {
         {
           y: BG_HEIGHT,
           x: BG_WIDTH,
-          width: 450,
-          height: 1516,
+          width: BG_WIDTH,
+          height: BG_HEIGHT,
           yAlign: 'bottom',
           xAlign: 'right',
-          image: "resources/images/game/GameScreen/midground.png"
+          image: "resources/images/kfc/BG_City_Middle.png"
         }
       ]
     },    
     {
-      id: 'left_ship',
+      id: 'left_clouds',
       spawnCount: 40,
       xMultiplier: 0,
       xCanSpawn: false,
@@ -167,30 +165,15 @@ exports = {
       yLimitMax: BG_HEIGHT / 16,
       pieceOptions: [
         {
-          styleRanges: { x: [0 - 260 * CLOUD_SCALE / 2, BG_WIDTH / 2 - 260 * CLOUD_SCALE / 2] },
-          width: 160 * CLOUD_SCALE,
-          height: 86 * CLOUD_SCALE,
-          scale: 0.75,
-          image: "resources/images/game/GameScreen/ship_01.png"
-        },
-        {
-          styleRanges: { x: [0 - 450 * CLOUD_SCALE / 2, BG_WIDTH / 2 - 450 * CLOUD_SCALE / 2] },
-          width: 190 * CLOUD_SCALE,
-          height: 100 * CLOUD_SCALE,
-          scale: 0.75,
-          image: "resources/images/game/GameScreen/ship_02.png"
-        },
-        {
-          styleRanges: { x: [0 - 450 * CLOUD_SCALE / 2, BG_WIDTH / 2 - 450 * CLOUD_SCALE / 2] },
-          width: 168 * CLOUD_SCALE,
-          height: 104 * CLOUD_SCALE,
-          scale: 0.75,
-          image: "resources/images/game/GameScreen/ship_04.png"
-        }     
+          styleRanges: { x: [0 - 400 * CLOUD_SCALE / 2, BG_WIDTH / 2 - 400 * CLOUD_SCALE / 2] },
+          width: 122,
+          height: 44,
+          image: "resources/images/kfc/Cloud_2.png"
+        }    
       ]
     },
     {
-      id: 'right_ship',
+      id: 'right_clouds',
       spawnCount: 40,
       xMultiplier: 0,
       xCanSpawn: false,
@@ -203,30 +186,15 @@ exports = {
       yLimitMax: - BG_HEIGHT / 16,
       pieceOptions: [
         {
-          styleRanges: { x: [BG_WIDTH / 2, BG_WIDTH - 260 * CLOUD_SCALE / 2 ] },
-          width: 160 * CLOUD_SCALE,
-          height: 86 * CLOUD_SCALE,
-          scale: 0.75,
-          image: "resources/images/game/GameScreen/ship_01.png"
-        },
-        {
-          styleRanges: { x: [BG_WIDTH / 2, BG_WIDTH - 450 * CLOUD_SCALE / 2] },
-          width: 190 * CLOUD_SCALE,
-          height: 100 * CLOUD_SCALE,
-          scale: 0.75,
-          image: "resources/images/game/GameScreen/ship_02.png"
-        },
-        {
-          styleRanges: { x: [BG_WIDTH / 2, BG_WIDTH - 450 * CLOUD_SCALE / 2] },
-          width: 168 * CLOUD_SCALE,
-          height: 104 * CLOUD_SCALE,
-          scale: 0.75,
-          image: "resources/images/game/GameScreen/ship_04.png"
-        }  
+          styleRanges: { x: [0 - 400 * CLOUD_SCALE / 2, BG_WIDTH / 2 - 400 * CLOUD_SCALE / 2] },
+          width: 122,
+          height: 44,
+          image: "resources/images/kfc/Cloud_2.png"
+        } 
       ]
     },    
     {
-      id: 'ship2',
+      id: 'cloud2',
       spawnCount: 20,
       xMultiplier: 0, // To make it move, use xVelocity
       xCanSpawn: false,
@@ -239,31 +207,31 @@ exports = {
       yLimitMax: BG_HEIGHT / 8,
       pieceOptions: [
         {
-          styleRanges: { x: [0, BG_WIDTH * 0.25] },
-          width: 168 * CLOUD_SCALE,
-          height: 104 * CLOUD_SCALE,
-          image: "resources/images/game/GameScreen/ship_03.png"
+          // styleRanges: { x: [0, BG_WIDTH * 0.25] },
+          width: 337 * CLOUD_SCALE,
+          height: 123 * CLOUD_SCALE,
+          image: "resources/images/kfc/Cloud_1.png"
         }
       ]
     },
     {
-      id: 'ship3',
+      id: 'clould3',
       spawnCount: 20,
       xMultiplier: 0, // To make it move, use xVelocity
       xCanSpawn: false,
       xCanRelease: false,
-      xVelocity: -10,
+      // xVelocity: -10,
       yMultiplier: 0.4,
       yCanSpawn: true,
       yCanRelease: false,
-      yGapRange: [250, 550],
+      yGapRange: [350, 550],
       yLimitMax: - BG_HEIGHT / 4,
       pieceOptions: [
         {
-          styleRanges: { x: [BG_WIDTH * 0.75, BG_WIDTH] },
-          width: 168 * CLOUD_SCALE,
-          height: 104 * CLOUD_SCALE,
-          image: "resources/images/game/GameScreen/ship_03.png"
+          // styleRanges: { x: [BG_WIDTH * 0.75, BG_WIDTH] },
+          width: 561 * CLOUD_SCALE,
+          height: 122 * CLOUD_SCALE,
+          image: "resources/images/kfc/Cloud_3.png"
         }
       ]
     },
@@ -280,12 +248,51 @@ exports = {
         {
           y: BG_HEIGHT,
           width: BG_WIDTH,
-          height: 1084,
+          height: BG_HEIGHT,
           yAlign: 'bottom',
-          image: "resources/images/game/GameScreen/foreground.png"
+          image: "resources/images/kfc/BG_KFC_Store_front.png"
         }
       ]
     },
+    {
+      id: 'redtable',
+      spawnCount: 1,
+      xMultiplier: 0,
+      xCanSpawn: false,
+      xCanRelease: false,
+      yMultiplier: 0.4,
+      yCanSpawn: true,
+      yCanRelease: false,
+      pieceOptions: [
+        {
+          y: BG_HEIGHT,
+          width: BG_WIDTH,
+          height: 104,
+          yAlign: 'bottom',
+          image: "resources/images/kfc/RedTable.png"
+        }
+      ]
+    },
+    {
+      id: 'tray',
+      spawnCount: 1,
+      xMultiplier: 0,
+      xCanSpawn: false,
+      xCanRelease: false,
+      yMultiplier: 0.4,
+      yCanSpawn: true,
+      yCanRelease: false,
+      pieceOptions: [
+        {
+          x: (BG_WIDTH - 226) / 2,
+          y: BG_HEIGHT,
+          width: 226,
+          height: 74,
+          yAlign: 'bottom',
+          image: "resources/images/kfc/Tray.png"
+        }
+      ]
+    },        
     {
       id: 'wire',
       spawnCount: 6,
@@ -330,10 +337,30 @@ exports = {
     {
       name: "combo2",
       menus: [
-        "tile_godzilla",
-        "tile_jelly", 
-        "tile_kong",
-        "tile_jelly"
+        {
+          id: "tile_godzilla",
+          image: "resources/images/kfc/burger_able.png",
+          completeImage: "resources/images/kfc/burger_Completed.png",
+          disabledImage: "resources/images/kfc/burger_disable.png"          
+        },
+        {
+          id: "tile_jelly",
+          image: "resources/images/kfc/potato_able.png",
+          completeImage: "resources/images/kfc/potato_Completed.png",
+          disabledImage: "resources/images/kfc/potato_disable.png"
+        },
+        {
+          id: "tile_kong",
+          image: "resources/images/kfc/pepsi_able.png",
+          completeImage: "resources/images/kfc/pepsi_Completed.png",
+          disabledImage: "resources/images/kfc/pepsi_disable.png"
+        },
+        {
+          id: "tile_jelly",
+          image: "resources/images/kfc/popcorn_able.png",
+          completeImage: "resources/images/kfc/popcorn_Completed.png",
+          disabledImage: "resources/images/kfc/popcorn_disable.png"          
+        }
       ]
     },
     {
@@ -650,11 +677,11 @@ exports = {
   },
   pause_button: {
       x: 0,
-      y: BG_HEIGHT - BUTTON_HEIGHT,
+      y: BG_HEIGHT - 96,
       zIndex: 1000,
-      width: BUTTON_WIDTH,
-      height: BUTTON_HEIGHT,
-      image: "resources/images/game/UI/button_pause.png"    
+      width: 92,
+      height: 96,
+      image: "resources/images/kfc/Switch_Button.png"    
   },
   comboView: {
     x: 10,
@@ -664,32 +691,30 @@ exports = {
     zIndex: 1
   },
   timerView: {
-    //x: BG_WIDTH - BUTTON_WIDTH,
-    x: 100,
-    //y: (BG_HEIGHT - 105),
+    x: 160,
     y: 105,
-    width: 350,
-    height: 95,
+    width: 402,
+    height: 41,
     zIndex: 1000,
     timer_full: {
-      image: "resources/images/game/UI/timer_big_full.png",
+      image: "resources/images/kfc/Timeline.png",
       x: 0,
       y: 0,
-      width: 350,
-      height: 95,
+      width: 402,
+      height: 41,
       zIndex: 999,
     },
     timer_empty: {
-      image: "resources/images/game/UI/timer_big_empty.png",
-      x: 110,
+      image: "resources/images/kfc/Boder_Timeline.png",
+      x: 0,
       y: 0,
-      width: 350,
-      height: 95,
+      width: 402,
+      height: 41,
       zIndex: 998
     },
     number: {
-      width: 576,
-      height: 50,
+      width: 402,
+      height: 40,
       text: "00",
       horizontalAlign: "left",
       spacing: -8,

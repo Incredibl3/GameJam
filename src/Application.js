@@ -15,7 +15,6 @@ import entities.EntityPool as EntityPool;
 import parallax.Parallax as Parallax;
 import ui.resource.loader as loader;
 import effects;
-import lib.PubSub;
 import src.lib.uiInflater as uiInflater;
 
 // game imports
@@ -31,13 +30,13 @@ var max = Math.max;
 var MAX_TICK = config.maxTick;
 var BG_WIDTH = config.bgWidth;
 var BG_HEIGHT = config.bgHeight;
-var STEP_TO_UPDATE_PARALLAX = 2;
+var STEP_TO_UPDATE_PARALLAX = 3;
 var SHOW_HIT_BOUNDS = false;
 var GAME_OVER_DELAY = config.gameOverDelay;
 var MAX_TIME = 90000;
-var TIMER_WIDTH = 466;
-var TIMER_MARGIN = 36;
-var TIMER_REAL_WIDTH = 466 - 2 * TIMER_MARGIN; // Remove Margin
+var TIMER_WIDTH = 402;
+var TIMER_MARGIN = 0;
+var TIMER_REAL_WIDTH = TIMER_WIDTH - 2 * TIMER_MARGIN; // Remove Margin
 var MAIN_CHARATER_OSCILLATOR_DURATION = 500;
 var SQUISH_DURATION = 500;
 
@@ -53,7 +52,7 @@ exports = Class(GC.Application, function(supr) {
 		alwaysRepaint: true,
 		logsEnabled: true,
 		showFPS: false,
-		preload: ["resources/images/game"]
+		preload: ["resources/images/kfc"]
 	};
 
 	/**
@@ -180,6 +179,7 @@ exports = Class(GC.Application, function(supr) {
 
 		this.mainUI = new View(merge({ parent: this.bgLayer, zIndex: 1000, y: BG_HEIGHT - this.view.style.height }, config.MainUI));
 		uiInflater.addChildren(config.MainUI.children, this.mainUI);
+		console.log("tententente");
 
 		// Display score using ScoreView
 		//this.scoreView = new ScoreView(merge({parent: this.view}, config.scoreView));
@@ -189,10 +189,7 @@ exports = Class(GC.Application, function(supr) {
 
 		// Display the timer
 		this.timerView = new TimerView({ 
-			superview: app.comboView,
-			row: 2,
-			col: 3,
-			cospan: 4,
+			superview: this.mainUI
 		});
 		
 		
@@ -251,7 +248,7 @@ exports = Class(GC.Application, function(supr) {
 			gameOver: false
 		};
 
-		this._combo = new Combo(config.Combo[0]);
+		this._combo = new Combo(config.Combo[1]);
 		// this.scoreView.setText(this.model.currentscore);
 		this.heightView.setText(this.model.totalheight);
 		this.heightView.style.y = config.heightView.y + this.bgLayer.style.y;
@@ -387,7 +384,7 @@ exports = Class(GC.Application, function(supr) {
 				effects.squish(this._activeTile, {loop: false, duration: SQUISH_DURATION});
 			}
 			// Check if the landed tile has the same type with the current tile of the combo
-			if(this._activeTile.name == app._combo.getCurrentMenu())
+			if(this._activeTile.name == app._combo.getCurrentMenuID())
 			{
 				console.log("Correct menu order");
 				if(app._combo.isFinishCombo())
@@ -928,21 +925,25 @@ var TimerView = Class(View, function() {
 
 		this._timer_full_parent = new View({
 			parent: this,
-			x: 110,
+			x: 0,
 			y: config.timerView.timer_full.y,
 			width: config.timerView.timer_full.width,
 			height: config.timerView.timer_full.height,
 			zIndex: config.timerView.timer_full.zIndex,
 			clip: true
 		})
+		this._timer_empty_bar = new ImageView(merge({superview: this, image: "resources/images/kfc/BG_Timeline.png", zIndex: 997}, config.timerView.timer_empty));
 		this._timer_full = new ImageView(merge({superview: this._timer_full_parent}, config.timerView.timer_full));
 		this._timer_empty = new ImageView(merge({superview: this}, config.timerView.timer_empty));
-		this._timer_number = new ScoreView(merge({parent: this, x: 266, y: 25, zIndex: 1000}, config.timerView.number));
-		this._pause_button = new ImageView(merge({parent: app.view, x: 435, y: config.timerView.y + 83}, config.pause_button));
+		this._timer_number = new ScoreView(merge({parent: this, x: 196, y: 5, zIndex: 1000}, config.timerView.number));
+		this._pause_button = new ImageView(merge({parent: app.view, x: BG_WIDTH - 105, y: 165}, config.pause_button));
 
 		this._pause_button.on("InputSelect", bind(this, function() {
-			app._activeTile.transform();
-
+			this._pause_button.setImage("resources/images/kfc/Switch_Button.png");
+			animate(this._pause_button).wait(50).then(bind(this, function() {
+				this._pause_button.setImage("resources/images/kfc/Switch_Button_touched.png");
+				app._activeTile.transform();
+			}));
 			// if (app.model.gameOver || app.isShowingReadyGo)
 			// 	return;
 			// this._pause_button.setImage("resources/images/game/UI/button_pause_pressed.png");
@@ -985,6 +986,7 @@ var TimerView = Class(View, function() {
 	this.reset = function(opts) {
 		this._timer_full.style.visible = false;
 		this._timer_empty.style.visible = false;
+		this._timer_empty_bar.style.visible = false;
 		this._timer_number.style.visible = false;
 		this._timeIcon.style.visible = false;
 		this._timerStart = false;
@@ -1011,6 +1013,7 @@ var TimerView = Class(View, function() {
 
 	this.showTimer = function() {
 		this._timer_empty.style.visible = true;
+		this._timer_empty_bar.style.visible = true;
 		this._timer_full.style.visible = true;
 		this._timer_number.style.visible = true;
 		this._timerStart = true;
@@ -1127,7 +1130,7 @@ var InputView = Class(View, function() {
 	};
 });
 
-var Combo = Class(lib.PubSub, function(supr) {
+var Combo = Class(function(supr) {
 	this.id = "combo";
 	
 	this.init = function(opts) {
@@ -1136,10 +1139,6 @@ var Combo = Class(lib.PubSub, function(supr) {
 		this._menuArray = opts.menus;
 
 		this.shuffleComboArray(this._menuArray);
-
-		for (var i = 0; i < this._menuArray.length; i++) {
-			console.log("Current Menu: " + i + " is: " + this._menuArray[i]);
-		}
 	};
 
 	this.reset = function(opts) {
@@ -1147,48 +1146,47 @@ var Combo = Class(lib.PubSub, function(supr) {
 		this._menuArray = config.Combo[1].menus;
 
 		this.shuffleComboArray(this._menuArray);
-
-		for (var i = 0; i < this._menuArray.length; i++) {
-			console.log("Current Menu: " + i + " is: " + this._menuArray[i]);
-		}
 	};
 
 	this.shuffleComboArray = function(array) {
-		 var count = array.length,
-		     randomnumber,
-		     temp;
-		 while( count ){
-		  randomnumber = Math.random() * count-- | 0;
-		  temp = array[count];
-		  array[count] = array[randomnumber];
-		  array[randomnumber] = temp
-		 }
+		var count = array.length,
+		 	randomnumber,
+		 	temp;
+		while( count ){
+			randomnumber = Math.random() * count-- | 0;
+			temp = array[count];
+			array[count] = array[randomnumber];
+			array[randomnumber] = temp;
+		}
+
+ 		for (var i = 0; i < array.length; i++) {
+			console.log("Current Menu: " + i + " is: " + array[i].id);
+
+			var menu = "menu" + i;
+			app.mainUI.ComboMenu[menu].updateImages(array[i]);
+			if (i == 0)
+				app.mainUI.ComboMenu[menu].updateState("enabled");
+		}
+
 	};
 
 	this.increaseIndex = function() {
 		this._currentMenuID++;
+		if (this._currentMenuID - 1 > 0) {
+			var menu = "menu" + this._currentMenuID;
+			app.mainUI.ComboMenu[menu].updateState("completed");
+		}	
+		menu = "menu" + this._currentMenuID;
+		app.mainUI.ComboMenu[menu].updateState("enabled");
+
 		console.log("_currentMenuID " + this._currentMenuID);
 	};
 
-	this.getCurrentMenu = function(){
-		return this._menuArray[this._currentMenuID];
+	this.getCurrentMenuID = function(){
+		return this._menuArray[this._currentMenuID].id;
 	};
 
 	this.isFinishCombo = function(){
 		return this._currentMenuID == this._menuArray.length - 1;
-	};
-
-	this.Next = function(opts) {
-		var type;
-		for (var i = 0; i < opts.length; i++) {
-			if (this._menuArray[this._currentMenuID] == opts[i].id) {
-				type = opts[i];
-			}
-		};
-
-		console.log("Next type is: " + type.id);
-
-
-		return type;
 	};
 });
