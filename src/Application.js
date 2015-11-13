@@ -16,6 +16,7 @@ import parallax.Parallax as Parallax;
 import ui.resource.loader as loader;
 import effects;
 import lib.PubSub;
+import src.lib.uiInflater as uiInflater;
 
 // game imports
 import src.Config as config;
@@ -30,7 +31,7 @@ var max = Math.max;
 var MAX_TICK = config.maxTick;
 var BG_WIDTH = config.bgWidth;
 var BG_HEIGHT = config.bgHeight;
-var STEP_TO_UPDATE_PARALLAX = 3;
+var STEP_TO_UPDATE_PARALLAX = 2;
 var SHOW_HIT_BOUNDS = false;
 var GAME_OVER_DELAY = config.gameOverDelay;
 var MAX_TIME = 90000;
@@ -39,8 +40,6 @@ var TIMER_MARGIN = 36;
 var TIMER_REAL_WIDTH = 466 - 2 * TIMER_MARGIN; // Remove Margin
 var MAIN_CHARATER_OSCILLATOR_DURATION = 500;
 var SQUISH_DURATION = 500;
-
-
 
 /**
  * Application Class
@@ -179,92 +178,14 @@ exports = Class(GC.Application, function(supr) {
 			blockEvents: true
 		});
 
+		this.mainUI = new View(merge({ parent: this.bgLayer, zIndex: 1000, y: BG_HEIGHT - this.view.style.height }, config.MainUI));
+		uiInflater.addChildren(config.MainUI.children, this.mainUI);
+
 		// Display score using ScoreView
 		//this.scoreView = new ScoreView(merge({parent: this.view}, config.scoreView));
 		// this view has relative position to the _dot_line (which is inside the bgLayer) 
 		// => actually the offset y of it should calculate with the y of bgLayer
 		this.heightView = new ScoreView(merge({parent: this.view, y: config.heightView.y + this.bgLayer.style.y}, config.heightView));
-
-		// Combo View
-		this.comboView = new GridView({ 
-			parent: this.bgLayer, 
-			x: 10,
-		    y: 10,
-			width: 566,
-		    height: 200,
-			cols: 6,
-			rows: 2,
-			hideOutOfRange: true,
-			showInRange: true,
-			zIndex: 1
-		}); 
-
-		// Display combo image
-		this.comboImage = new ImageView({
-			superview: app.comboView, 
-			// x: 10,
-			// y: 10,
-			row: 1,
-			rowspan: 2,
-			col: 1,
-			colspan: 2,
-			width: 200,
-			height: 200,
-			image: "resources/images/game/UI/time_icon_0001.png",
-			zIndex: 1
-		});
-
-		// Combo Item 1
-		this.itemImage1 = new ImageView({
-			superview: app.comboView, 
-			// x: 10,
-			// y: 10,
-			row: 1,
-			col: 3,
-			width: 50,
-			height: 50,
-			image: "resources/images/game/UI/time_icon_0001.png",
-			zIndex: 1
-		});
-
-		// Combo Item 2
-		this.itemImage2 = new ImageView({
-			superview: app.comboView, 
-			// x: 10,
-			// y: 10,
-			row: 1,
-			col: 4,
-			width: 50,
-			height: 50,
-			image: "resources/images/game/UI/time_icon_0001.png",
-			zIndex: 1
-		});
-
-		// Combo Item 3
-		this.itemImage3 = new ImageView({
-			superview: app.comboView, 
-			// x: 10,
-			// y: 10,
-			row: 1,
-			col: 5,
-			width: 50,
-			height: 50,
-			image: "resources/images/game/UI/time_icon_0001.png",
-			zIndex: 1
-		});
-
-		// Combo Item 4
-		this.itemImage4 = new ImageView({
-			superview: app.comboView, 
-			// x: 10,
-			// y: 10,
-			row: 1,
-			col: 6,
-			width: 50,
-			height: 50,
-			image: "resources/images/game/UI/time_icon_0001.png",
-			zIndex: 1
-		});
 
 		// Display the timer
 		this.timerView = new TimerView({ 

@@ -34,6 +34,80 @@ exports = {
   falling_offsetY: FALLING_OFFSETY,
   yAdjustment: PLAYER_OFFSETY_ADJUSTMENT,
   gameOverDelay: 3000,
+  MainUI: {
+    name: 'UILayout',
+    x: 0,
+    y: 0,
+    width: 576,
+    height: 250,
+    children: [
+      {
+        name: "ComboImage",
+        cls: "ui.ImageView",
+        width: 250,
+        height: 250,
+        x: 0,
+        y: 0,
+        image: "resources/images/game/UI/time_icon_0001.png"
+      },
+      {
+        name: "ComboMenu",
+        layout: "linear",
+        direction: "horizontal",
+        width: 326,
+        height: 200,
+        x: 250,
+        y: 0,
+        children: [
+          {
+            name: "ComboMenu1",
+            cls: "ui.ImageView",
+            width: 80,
+            height: 80,
+            x: 0,
+            y: 0,
+            image: "resources/images/game/UI/time_icon_0001.png"
+          },
+          {
+            name: "ComboMenu2",
+            cls: "ui.ImageView",
+            width: 80,
+            height: 80,
+            x: 0,
+            y: 0,
+            image: "resources/images/game/UI/time_icon_0001.png"
+          },
+          {
+            name: "ComboMenu3",
+            cls: "ui.ImageView",
+            width: 80,
+            height: 80,
+            x: 0,
+            y: 0,
+            image: "resources/images/game/UI/time_icon_0001.png"
+          },
+          {
+            name: "ComboMenu4",
+            cls: "ui.ImageView",
+            width: 80,
+            height: 80,
+            x: 0,
+            y: 0,
+            image: "resources/images/game/UI/time_icon_0001.png"
+          }
+        ]       
+      },
+      // {
+      //   name: "Timer",
+      //   cls: "ui.ImageView",
+      //   width: 250,
+      //   height: 250,
+      //   x: 0,
+      //   y: 0,
+      //   image: "resources/images/game/UI/time_icon_0001.png"
+      // }      
+    ]
+  },
   backgroundLayers: [
     {
       id: 'bg',
