@@ -669,7 +669,18 @@ var PlayerEntityPool = Class(EntityPool, function() {
  	};
 
  	this.transform = function() {
- 		var type = app.tileObjects.caclulateOpts();
+ 		var type;
+ 		var done = false;
+ 		while (!done) {
+ 			type = app.tileObjects.caclulateOpts();	
+ 			console.log("Candidate type: " + type.id);
+ 			var array = app._combo._menuArray;
+			for (var i = 0; i < array.length; i++) {
+				// console.log("Current Menu: " + i + " is: " + array[i].id);
+
+				if (type.id == array[i].id && type.id != this.name) done = true;
+			}
+ 		} 
  		var _isFirst = this._isFirst;
 
  		this.reset(type);
@@ -814,7 +825,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 
  	this.reset = function() {		
  		sup.reset.call(this);
- 		this._zIndex = 300;
+ 		this._zIndex = 0;
  		this.spawn();
  		app._activeTile._isFirst = true;
  		// And we recalculate the dotted_box
@@ -841,7 +852,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 	 			// Limit the rate of star to 10% only
 	 			// var star_ok = (Math.floor(Math.random() * 100) > 50);
 	 			var star_ok = false;
-	 			type = config.tileObjects.types[Math.floor(Math.random() * (config.tileObjects.types.length - 3))];	
+	 			type = config.tileObjects.types[Math.floor(Math.random() * (config.tileObjects.types.length))];
 	 			if (type.id == "tile_star_blue" && (app.playerEntityPool._stepToParallaxUpdate > -5 || !star_ok)) done = false;
 	 		}
 
@@ -856,10 +867,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
  		// type = app._combo.Next(config.tileObjects.types);
 
 
- 		if (app._topTile && app._topTile.zTop >= type.zBottom)
- 			this._zIndex--;
- 		else
- 			this._zIndex++;
+ 		this._zIndex++;
 
 		var offsetX = (BG_WIDTH - type.viewOpts.width) / 2 - config.player_offsetX + app.playerEntityPool._pinwheel.x;
 		var offsetY = app.playerEntityPool._pinwheel.y + config.tile_ralativeY - type.viewOpts.height / 2;
@@ -1119,7 +1127,7 @@ var Combo = Class(function(supr) {
 		}
 
  		for (var i = 0; i < array.length; i++) {
-			console.log("Current Menu: " + i + " is: " + array[i].id);
+			// console.log("Current Menu: " + i + " is: " + array[i].id);
 
 			var menu = "menu" + i;
 			app.mainUI.ComboMenu[menu].updateImages(array[i]);

@@ -2,7 +2,7 @@ import device;
 
 var CLOUD_SCALE = 0.7;
 var BOX_SCALE = 1;
-var TILE_SCALE = 0.8;
+var TILE_SCALE = 1;
 var BUTTON_SCALE = device.width / 576;
 var BG_WIDTH = 576;
 var BG_HEIGHT = 1024;
@@ -345,28 +345,28 @@ exports = {
       name: "combo2",
       menus: [
         {
-          id: "tile_godzilla",
-          image: "resources/images/kfc/burger_able.png",
-          completeImage: "resources/images/kfc/burger_Completed.png",
-          disabledImage: "resources/images/kfc/burger_disable.png"          
+          id: "tile_burger",
+          image: "resources/images/kfc/Combo_Item/burger_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/burger_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/burger_disable.png"          
         },
         {
-          id: "tile_jelly",
-          image: "resources/images/kfc/potato_able.png",
-          completeImage: "resources/images/kfc/potato_Completed.png",
-          disabledImage: "resources/images/kfc/potato_disable.png"
+          id: "tile_potato",
+          image: "resources/images/kfc/Combo_Item/potato_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/potato_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/potato_disable.png"
         },
         {
-          id: "tile_kong",
-          image: "resources/images/kfc/pepsi_able.png",
-          completeImage: "resources/images/kfc/pepsi_Completed.png",
-          disabledImage: "resources/images/kfc/pepsi_disable.png"
+          id: "tile_pepsi",
+          image: "resources/images/kfc/Combo_Item/pepsi_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/pepsi_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/pepsi_disable.png"
         },
         {
-          id: "tile_jelly",
-          image: "resources/images/kfc/popcorn_able.png",
-          completeImage: "resources/images/kfc/popcorn_Completed.png",
-          disabledImage: "resources/images/kfc/popcorn_disable.png"          
+          id: "tile_wings",
+          image: "resources/images/kfc/Combo_Item/wing_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/wing_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/wing_disable.png"          
         }
       ]
     },
@@ -450,194 +450,173 @@ exports = {
   tileObjects: {
   	types: [
   		{
-  			id: "tile_godzilla",
+  			id: "tile_bigburger",
         zTop: 1,
         zBottom: 0,
-			  x: (BG_WIDTH - 166 * TILE_SCALE) / 2,
+			  x: (BG_WIDTH - 136 * TILE_SCALE) / 2,
 			  y: TILE_OFFSETY,
   			hitOpts: {
           offsetX: 0,
           offsetY: 10,  // If you change this, change the value in height too
-  				width: 166 * TILE_SCALE,
-				  height: 150 * TILE_SCALE - 10 - TILE_HIT_BOUNDS_MARGIN_BOTTOM
+  				width: 136 * TILE_SCALE,
+				  height: 136 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
   			},
   			viewOpts: {
-  			  width: 166 * TILE_SCALE,
-  			  height: 150 * TILE_SCALE,
-          anchorX: 166 * TILE_SCALE / 2,
-          anchorY: 150 * TILE_SCALE,
+  			  width: 136 * TILE_SCALE,
+  			  height: 136 * TILE_SCALE,
+          anchorX: 136 * TILE_SCALE / 2,
+          anchorY: 136 * TILE_SCALE / 2,
           r: 0,
-  			  url: "resources/images/game/GameScreen/tile_godzilla.png"
+  			  url: "resources/images/kfc/tiles/tile_bigburger.png"
   			}	
   		},
       {
-        id: "tile_jelly",
-        zTop: 0,
-        zBottom: 0,
-        x: (BG_WIDTH - 166 * TILE_SCALE) / 2,
-        y: TILE_OFFSETY,
-        hitOpts: {
-          offsetX: 0,
-          offsetY: 0,
-          width: 166 * TILE_SCALE,
-          height: 140 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
-        },
-        viewOpts: {
-          width: 166 * TILE_SCALE,
-          height: 140 * TILE_SCALE,
-          anchorX: 166 * TILE_SCALE / 2,
-          anchorY: 140 * TILE_SCALE,
-          r: 0,
-          url: "resources/images/game/GameScreen/tile_jelly.png"
-        } 
-      },
-      {
-        id: "tile_kong",
+        id: "tile_burger",
         zTop: 1,
         zBottom: 0,
-        x: (BG_WIDTH - 192 * TILE_SCALE) / 2,
-        y: TILE_OFFSETY,
-        hitOpts: {
-          offsetX: 20,
-          offsetY: 20,
-          width: 192 * TILE_SCALE - 40,
-          height: 166 * TILE_SCALE - 20 - TILE_HIT_BOUNDS_MARGIN_BOTTOM
-        },
-        viewOpts: {
-          width: 192 * TILE_SCALE,
-          height: 166 * TILE_SCALE,
-          anchorX: 192 * TILE_SCALE / 2,
-          anchorY: 166 * TILE_SCALE,
-          r: 0,
-          url: "resources/images/game/GameScreen/tile_kong.png"
-        }
-      },
-      {
-        id: "tile_squid",
-        zTop: 0,
-        zBottom: 2,
-        x: (BG_WIDTH - 166 * TILE_SCALE) / 2,
+        x: (BG_WIDTH - 136 * TILE_SCALE) / 2,
         y: TILE_OFFSETY,
         hitOpts: {
           offsetX: 0,
-          offsetY: 0,
-          width: 166 * TILE_SCALE,
-          height: 155 * TILE_SCALE - 15 - TILE_HIT_BOUNDS_MARGIN_BOTTOM
+          offsetY: 10,  // If you change this, change the value in height too
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
         },
         viewOpts: {
-          width: 166 * TILE_SCALE,
-          height: 155 * TILE_SCALE,
-          anchorX: 166 * TILE_SCALE / 2,
-          anchorY: 155 * TILE_SCALE,
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE,
+          anchorX: 136 * TILE_SCALE / 2,
+          anchorY: 136 * TILE_SCALE / 2,
           r: 0,
-          url: "resources/images/game/GameScreen/tile_squid.png"
+          url: "resources/images/kfc/tiles/tile_burger.png"
         } 
       },
       {
-        id: "tile_wolf",
+        id: "tile_double_burger",
         zTop: 1,
         zBottom: 0,
-        x: (BG_WIDTH - 166 * TILE_SCALE) / 2,
+        x: (BG_WIDTH - 136 * TILE_SCALE) / 2,
         y: TILE_OFFSETY,
         hitOpts: {
           offsetX: 0,
-          offsetY: 5,
-          width: 166 * TILE_SCALE,
-          height: 142 * TILE_SCALE - 5 - TILE_HIT_BOUNDS_MARGIN_BOTTOM
+          offsetY: 10,  // If you change this, change the value in height too
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
         },
         viewOpts: {
-          width: 166 * TILE_SCALE,
-          height: 142 * TILE_SCALE,
-          anchorX: 166 * TILE_SCALE / 2,
-          anchorY: 142 * TILE_SCALE,
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE,
+          anchorX: 136 * TILE_SCALE / 2,
+          anchorY: 136 * TILE_SCALE / 2,
           r: 0,
-          url: "resources/images/game/GameScreen/tile_wolf.png"
+          url: "resources/images/kfc/tiles/tile_double_burger.png"
         } 
       },
       {
-        id: "tile_star_blue",
-        zTop: 0,
+        id: "tile_icecream",
+        zTop: 1,
         zBottom: 0,
-        x: (BG_WIDTH - 172 * TILE_SCALE) / 2,
+        x: (BG_WIDTH - 136 * TILE_SCALE) / 2,
         y: TILE_OFFSETY,
         hitOpts: {
           offsetX: 0,
-          offsetY: 5,
-          width: 172 * TILE_SCALE,
-          height: 140 * TILE_SCALE - 5 - TILE_HIT_BOUNDS_MARGIN_BOTTOM
+          offsetY: 10,  // If you change this, change the value in height too
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
         },
         viewOpts: {
-          width: 172 * TILE_SCALE,
-          height: 140 * TILE_SCALE,
-          anchorX: 172 * TILE_SCALE / 2,
-          anchorY: 140 * TILE_SCALE,
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE,
+          anchorX: 136 * TILE_SCALE / 2,
+          anchorY: 136 * TILE_SCALE / 2,
           r: 0,
-          url: "resources/images/game/GameScreen/tile_star_blue.png"
-        }
+          url: "resources/images/kfc/tiles/tile_icecream.png"
+        } 
       },
       {
-        id: "tile_star_green",
-        zTop: 0,
+        id: "tile_pepsi",
+        zTop: 1,
         zBottom: 0,
-        x: (BG_WIDTH - 172 * TILE_SCALE) / 2,
+        x: (BG_WIDTH - 136 * TILE_SCALE) / 2,
         y: TILE_OFFSETY,
         hitOpts: {
           offsetX: 0,
-          offsetY: 5,
-          width: 172 * TILE_SCALE,
-          height: 140 * TILE_SCALE - 5 - TILE_HIT_BOUNDS_MARGIN_BOTTOM
+          offsetY: 10,  // If you change this, change the value in height too
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
         },
         viewOpts: {
-          width: 172 * TILE_SCALE,
-          height: 140 * TILE_SCALE,
-          anchorX: 172 * TILE_SCALE / 2,
-          anchorY: 140 * TILE_SCALE,
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE,
+          anchorX: 136 * TILE_SCALE / 2,
+          anchorY: 136 * TILE_SCALE / 2,
           r: 0,
-          url: "resources/images/game/GameScreen/tile_star_green.png"
-        }
+          url: "resources/images/kfc/tiles/tile_pepsi.png"
+        } 
       },
       {
-        id: "tile_star_purple",
-        zTop: 0,
+        id: "tile_potato",
+        zTop: 1,
         zBottom: 0,
-        x: (BG_WIDTH - 172 * TILE_SCALE) / 2,
+        x: (BG_WIDTH - 136 * TILE_SCALE) / 2,
         y: TILE_OFFSETY,
         hitOpts: {
           offsetX: 0,
-          offsetY: 5,
-          width: 172 * TILE_SCALE,
-          height: 140 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
+          offsetY: 10,  // If you change this, change the value in height too
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
         },
         viewOpts: {
-          width: 172 * TILE_SCALE,
-          height: 140 * TILE_SCALE,
-          anchorX: 172 * TILE_SCALE / 2,
-          anchorY: 140 * TILE_SCALE,
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE,
+          anchorX: 136 * TILE_SCALE / 2,
+          anchorY: 136 * TILE_SCALE / 2,
           r: 0,
-          url: "resources/images/game/GameScreen/tile_star_purple.png"
-        }
+          url: "resources/images/kfc/tiles/tile_potato.png"
+        } 
       },
       {
-        id: "tile_star_yellow",
-        zTop: 0,
+        id: "tile_thigh",
+        zTop: 1,
         zBottom: 0,
-        x: (BG_WIDTH - 172 * TILE_SCALE) / 2,
+        x: (BG_WIDTH - 136 * TILE_SCALE) / 2,
         y: TILE_OFFSETY,
         hitOpts: {
           offsetX: 0,
-          offsetY: 5,
-          width: 172 * TILE_SCALE,
-          height: 140 * TILE_SCALE - 5 - TILE_HIT_BOUNDS_MARGIN_BOTTOM
+          offsetY: 10,  // If you change this, change the value in height too
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
         },
         viewOpts: {
-          width: 172 * TILE_SCALE,
-          height: 140 * TILE_SCALE,
-          anchorX: 172 * TILE_SCALE / 2,
-          anchorY: 140 * TILE_SCALE,
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE,
+          anchorX: 136 * TILE_SCALE / 2,
+          anchorY: 136 * TILE_SCALE / 2,
           r: 0,
-          url: "resources/images/game/GameScreen/tile_star_yellow.png"
-      }
-      },       
+          url: "resources/images/kfc/tiles/tile_thigh.png"
+        } 
+      },
+      {
+        id: "tile_wings",
+        zTop: 1,
+        zBottom: 0,
+        x: (BG_WIDTH - 136 * TILE_SCALE) / 2,
+        y: TILE_OFFSETY,
+        hitOpts: {
+          offsetX: 0,
+          offsetY: 10,  // If you change this, change the value in height too
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE - TILE_HIT_BOUNDS_MARGIN_BOTTOM
+        },
+        viewOpts: {
+          width: 136 * TILE_SCALE,
+          height: 136 * TILE_SCALE,
+          anchorX: 136 * TILE_SCALE / 2,
+          anchorY: 136 * TILE_SCALE / 2,
+          r: 0,
+          url: "resources/images/kfc/tiles/tile_wings.png"
+        } 
+      }   
   	]
   },
   scoreView: {
