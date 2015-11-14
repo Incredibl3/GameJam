@@ -30,7 +30,7 @@ var max = Math.max;
 var MAX_TICK = config.maxTick;
 var BG_WIDTH = config.bgWidth;
 var BG_HEIGHT = config.bgHeight;
-var STEP_TO_UPDATE_PARALLAX = 3;
+var STEP_TO_UPDATE_PARALLAX = 2;
 var SHOW_HIT_BOUNDS = false;
 var GAME_OVER_DELAY = config.gameOverDelay;
 var MAX_TIME = 90000;
@@ -245,6 +245,7 @@ exports = Class(GC.Application, function(supr) {
 		this.heightView.setText(this.model.totalheight);
 		this.heightView.style.y = config.heightView.y + this.bgLayer.style.y;
 		this.timerView.reset();
+		this.timerView._switch_button.style.visible = false;
 
 		this._isStarActive = 0;
 		this.elementLayer.style.y = 0;
@@ -404,6 +405,7 @@ exports = Class(GC.Application, function(supr) {
 	this.gameOver = function() {
 		if (!this.model.gameOver) {
 			this.model.gameOver = true;
+			app.timerView._switch_button.style.update({visible: false});
 			this.gameOverLayer.style.visible = true;
 			this.gameOverTxt.style.visible = true;
 			animate(this.gameOverTxt).now({y: (BG_HEIGHT - 345)/2}, 1000);
@@ -441,6 +443,7 @@ exports = Class(GC.Application, function(supr) {
 					this.playerEntityPool._pinwheel.view.startAnimation("blink", {});
 					this.playerEntityPool._initialY = this.playerEntityPool.getCurrentFrameMargin();
 					this.playerEntityPool._dotted_box.view.style.visible = true;
+					this.timerView._switch_button.style.visible = true;
 				}));
 			}));
 		}));
@@ -500,10 +503,12 @@ var PlayerEntityPool = Class(EntityPool, function() {
 		if (!app._activeTile._isFalling && app._activeTile.CanFall && !app._activeTile._isBouncingBack) {
 			app._activeTile.x = this._pinwheel.x + (BG_WIDTH - app._activeTile.view.width) / 2 - config.player_offsetX;
 		}
+		this._pinwheelStick.x = this._pinwheel.x + (this._pinwheel.width / 2) - 20 ;
 		if (this._pinwheel_targetY != BG_HEIGHT) { // this means player entities should be animated up
 			this._pinwheel.y = this._pinwheel.y + (this._dotted_line.y - this._dotted_line_offsetY);
 			this._dotted_box.y = this._dotted_box.y + (this._dotted_line.y - this._dotted_line_offsetY);
-			this._pinwheelStick.y = this._pinwheelStick.y;
+			this._pinwheelStick.y = this._pinwheelStick.y + (this._dotted_line.y - this._dotted_line_offsetY);
+
 			this._dotted_line_offsetY = this._dotted_line.y;
 			if (this._pinwheel.y <= this._pinwheel_targetY) {
 				this._dotted_line_animation.clear();
