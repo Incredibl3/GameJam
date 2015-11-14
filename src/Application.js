@@ -1027,8 +1027,14 @@ var Combo = Class(function(supr) {
 	this.reset = function(opts) {
 		this._currentMenuID = -1;
 		var ran = Math.random() * 3 | 0;
-		console.log("random ra " + ran);
 		this._menuArray = config.Combo[ran].menus;
+		if (ran == 0) {
+			app.mainUI.ComboImage.setImage("resources/images/kfc/ICON_Combo_1.png");
+		} else if (ran == 1) {
+			app.mainUI.ComboImage.setImage("resources/images/kfc/ICON_Combo_2.png");
+		} else if (ran == 2) {
+			app.mainUI.ComboImage.setImage("resources/images/kfc/ICON_Combo_3.png");
+		}
 
 		this.shuffleComboArray(this._menuArray);
 	};
