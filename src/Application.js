@@ -784,7 +784,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 			// The target should be app._topTile.y + app._topTile.model.offsetY
 			var distance = (app._topTile.y + app._topTile.model.offsetY) - (this.y + this.model.offsetY + this.model.height);
 
-			this.ay = distance * 2 / (16 * 20) / (16 * 10);
+			this.ay = distance * 2 / (16 * 20) / (16 * 20);
 
 			this._targetY = (app._topTile.y + app._topTile.model.offsetY) - (this.model.offsetY + this.model.height);
 		}
@@ -821,7 +821,10 @@ var PlayerEntityPool = Class(EntityPool, function() {
  	this.caclulateOpts = function() {
  		var type = config.tileObjects.types[Math.floor(Math.random() * (config.tileObjects.types.length))];
  			
- 		this._zIndex++;
+ 		if(app._topTile && app._topTile.zTop >= type.zBottom)
+ 			this._zIndex--;
+ 		else
+ 			this._zIndex++;
 
 		var offsetX = (BG_WIDTH - type.viewOpts.width) / 2 - config.player_offsetX + app.playerEntityPool._pinwheel.x;
 		var offsetY = app.playerEntityPool._pinwheel.y + config.tile_ralativeY - type.viewOpts.height / 2;
