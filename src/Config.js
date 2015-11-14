@@ -6,8 +6,8 @@ var TILE_SCALE = 0.8;
 var BUTTON_SCALE = device.width / 576;
 var BG_WIDTH = 576;
 var BG_HEIGHT = 1024;
-var PLAYER_SCALE = 0.6;
-var PLAYER_OFFSETX = (BG_WIDTH - 480 * PLAYER_SCALE) / 2;
+var PLAYER_SCALE = 1;
+var PLAYER_OFFSETX = (BG_WIDTH - 151 * PLAYER_SCALE) / 2;
 var TILE_HEIGHT = 150 * TILE_SCALE;
 var TILE_VELOCITY = 0.1;
 var TILE_HIT_BOUNDS_MARGIN_X = 10;
@@ -17,7 +17,7 @@ var BOX_OFFSETY = BG_HEIGHT - BOX_HEIGHT - BOX_HEIGHT;
 var FALLING_OFFSETY = BOX_OFFSETY + BOX_HEIGHT;
 var PLAYER_OFFSETY_ADJUSTMENT = 50;
 var PLAYER_OFFSETY = BG_HEIGHT / 2 - 550 * PLAYER_SCALE + PLAYER_OFFSETY_ADJUSTMENT;
-var TILE_RELATIVEY = 500 * PLAYER_SCALE;
+var TILE_RELATIVEY = 300 * PLAYER_SCALE;
 var TILE_OFFSETY = PLAYER_OFFSETY + TILE_RELATIVEY;
 var BUTTON_WIDTH = 115;
 var BUTTON_HEIGHT = 115;
@@ -56,7 +56,7 @@ exports = {
         direction: "horizontal",
         width: 427,
         height: 157,
-        x: 160,
+        x: 149,
         y: 0,
         children: [
           {
@@ -105,6 +105,42 @@ exports = {
           }
         ]       
       },
+    ]
+  },
+  kfcMan: {
+    name: 'kfcManLayout',
+    x: 136,
+    y: 200,
+    width: 147,
+    height: 200,
+    children: [
+      {
+        name: "crossbeam",
+        cls: "ui.ImageView",
+        width: 147,
+        height: 61,
+        x: 298,
+        y: 350,
+        image: "resources/images/kfc/crossbeam.png"
+      },
+      {
+        name: "character",
+        cls: "ui.ImageView",
+        width: 74,
+        height: 181,
+        x: 330,
+        y: 175,
+        image: "resources/images/kfc/Character_NoTouch.png"
+      },
+      {
+        name: "energy",
+        cls: "ui.ImageView",
+        width: 101,
+        height: 82,
+        x: 240,
+        y: 205,
+        image: "resources/images/kfc/enegy.png"
+      }
     ]
   },
   backgroundLayers: [
@@ -292,36 +328,7 @@ exports = {
           image: "resources/images/kfc/Tray.png"
         }
       ]
-    },        
-    {
-      id: 'wire',
-      spawnCount: 6,
-      xMultiplier: 0,
-      xCanSpawn: false,
-      xCanRelease: false,
-      yMultiplier: 0.45,
-      yCanSpawn: true,
-      yCanRelease: false,
-      yGapRange: [350, 600],
-      yLimitMax: -BG_HEIGHT / 8,
-      pieceOptions: [
-        {
-          width: 576,
-          height: 137,
-          image: "resources/images/game/GameScreen/wire_01.png"
-        },
-        {
-          width: 576,
-          height: 109,
-          image: "resources/images/game/GameScreen/wire_02.png"
-        },
-        {
-          width: 576,
-          height: 216,
-          image: "resources/images/game/GameScreen/wire_03.png"
-        }     
-      ]
-    }
+    },  
   ],
   Combo: [
     {
@@ -381,49 +388,49 @@ exports = {
     dotted_box: {
       x: (BG_WIDTH - 176 * TILE_SCALE) / 2,
       y: TILE_OFFSETY,
-    hitOpts: {
-      width: 176 * (TILE_SCALE + 0.1),
-      height: 147 * (TILE_SCALE + 0.1)
+      hitOpts: {
+        width: 176 * (TILE_SCALE + 0.1),
+        height: 147 * (TILE_SCALE + 0.1)
+      },
+      viewOpts: {
+        width: 176 * (TILE_SCALE + 0.1),
+        height: 147 * (TILE_SCALE + 0.1),
+        opacity: 0.5,
+        url: "resources/images/game/UI/dottedbox.png"
+      }          
     },
-    viewOpts: {
-      width: 176 * (TILE_SCALE + 0.1),
-      height: 147 * (TILE_SCALE + 0.1),
-      opacity: 0.5,
-      url: "resources/images/game/UI/dottedbox.png"
-    }          
+	  pinwheel: {
+	    x: PLAYER_OFFSETX,
+	    y: 400,
+  		hitOpts: {
+  		  width: 151 * PLAYER_SCALE,
+  		  height: 38 * PLAYER_SCALE
+  		},
+  		viewOpts: {
+  		  zIndex: 500,
+  		  width: 151 * PLAYER_SCALE,
+  		  height: 38 * PLAYER_SCALE,
+  		  defaultAnimation: "blink",
+  		  autoStart: false,
+        frameRate: 20,
+  		  loop: true,
+  		  url: "resources/images/game/Character/pinwheel"
+  		}
+	  },
+    pinwheelStick: {
+      x: (BG_WIDTH - 42 * TILE_SCALE) / 2,
+      y: 430,
+      hitOpts: {
+        width: 42 * PLAYER_SCALE,
+        height: 51 * PLAYER_SCALE
+      },
+      viewOpts: {
+        zIndex: 500,
+        width: 42 * PLAYER_SCALE,
+        height: 51 * PLAYER_SCALE,
+        image: "resources/images/kfc/pinwheel2.png"
+      }
     },
-	  koala: {
-	    x: PLAYER_OFFSETX,
-	    y: PLAYER_OFFSETY,
-		hitOpts: {
-		  width: 480 * PLAYER_SCALE,
-		  height: 550 * PLAYER_SCALE
-		},
-		viewOpts: {
-		  zIndex: 500,
-		  width: 480 * PLAYER_SCALE,
-		  height: 550 * PLAYER_SCALE,
-		  defaultAnimation: "blink",
-		  autoStart: false,
-      frameRate: 20,
-		  loop: true,
-		  url: "resources/images/game/Character/kaiju"
-		}
-	  },
-	  blimp: {
-	    x: PLAYER_OFFSETX,
-	    y: PLAYER_OFFSETY,
-		hitOpts: {
-		  width: 530 * PLAYER_SCALE,
-		  height: 870 * PLAYER_SCALE
-		},
-		viewOpts: {
-		  zIndex: 0,
-		  width: 530 * PLAYER_SCALE,
-		  height: 870 * PLAYER_SCALE,
-		  url: "resources/images/game/Character/blimp.png"
-		}	
-	  },
 	  dotted_line: {
 	    x: 0,
 	    y: FALLING_OFFSETY + 10,
@@ -675,7 +682,7 @@ exports = {
       "9": {image: "resources/images/game/numbers/9.png"}
     }
   },
-  pause_button: {
+  switch_button: {
       x: 0,
       y: BG_HEIGHT - 96,
       zIndex: 1000,

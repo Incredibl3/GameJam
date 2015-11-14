@@ -22,30 +22,14 @@
     "devkit-entities": "https://github.com/gameclosure/devkit-entities.git#v0.5.0",
     "devkit-parallax": "https://github.com/gameclosure/devkit-parallax#v0.3.5"
   },
-  "ios": {
-    "icons": {
-      "1024": "resources/icons/1024.png",
-      "114": "resources/icons/114.png",
-      "120": "resources/icons/120.png",
-      "144": "resources/icons/144.png",
-      "152": "resources/icons/152.png",
-      "36": "resources/icons/36.png",
-      "48": "resources/icons/48.png",
-      "512": "resources/icons/512.png",
-      "57": "resources/icons/57.png",
-      "72": "resources/icons/72.png",
-      "76": "resources/icons/76.png",
-      "96": "resources/icons/96.png"
-    }
-  },
-  "shortName": "catstack",
+  "shortName": "kfc",
   "studio": {
-    "domain": "weeby.co",
-    "name": "Weeby.co Games",
-    "stagingDomain": "staging.weeby.co"
+    "domain": "incredibl3.cf",
+    "name": "Incredibl3 Games",
+    "stagingDomain": "incredibl3.cf"
   },
   "supportedOrientations": [
     "portrait"
   ],
-  "title": "Alley Cat Stack"
+  "title": "KFC"
 }

@@ -136,11 +136,6 @@ exports = Class(GC.Application, function(supr) {
 	      x: BG_WIDTH / 2 - 100,
 	      y: 250,
 	      backgroundColor : "#7f8c8d",
-	      // images: {
-	      //   up: "resources/images/blue1.png",
-	      //   down: "resources/images/blue2.png",
-	      //   disabled: "resources/images/white1.png"
-	      // },
 	      scaleMethod: "9slice",
 	      sourceSlices: {
 	        horizontal: {left: 80, center: 116, right: 80},
@@ -177,14 +172,15 @@ exports = Class(GC.Application, function(supr) {
 			blockEvents: true
 		});
 
+		// Combo info layout
 		this.mainUI = new View(merge({ parent: this.bgLayer, zIndex: 1000, y: BG_HEIGHT - this.view.style.height }, config.MainUI));
 		uiInflater.addChildren(config.MainUI.children, this.mainUI);
-		console.log("tententente");
 
-		// Display score using ScoreView
-		//this.scoreView = new ScoreView(merge({parent: this.view}, config.scoreView));
-		// this view has relative position to the _dot_line (which is inside the bgLayer) 
-		// => actually the offset y of it should calculate with the y of bgLayer
+		// KFC Man layout
+		this.kfcMan = new View(merge({ parent: this.bgLayer, zIndex: 1000}, config.kfcMan));
+		uiInflater.addChildren(config.kfcMan.children, this.kfcMan);
+		this.kfcMan.energy.style.visible = false;
+
 		this.heightView = new ScoreView(merge({parent: this.view, y: config.heightView.y + this.bgLayer.style.y}, config.heightView));
 
 		// Display the timer
@@ -192,8 +188,7 @@ exports = Class(GC.Application, function(supr) {
 			superview: this.mainUI
 		});
 		
-		
-		// this._pause_button = new ImageView(merge({parent: app.view, x: 435, y: config.timerView.y + 83}, config.pause_button));
+
 		// The parallax that holds all background objects
 		this.parallax = new Parallax({ parent: this.bgLayer });
 		
@@ -214,12 +209,10 @@ exports = Class(GC.Application, function(supr) {
 		this.playerEntityPool = new PlayerEntityPool({ parent: this.elementLayer });
 		this.tileObjects = new TileObjects({ parent: this.elementLayer });
 
-		// this.reset();
 	};
 
 	/**
 	 * launchUI
-	 * ~ called automatically by devkit when its engine is ready
 	 */
 	this.launchUI = function() {};
 
@@ -249,7 +242,6 @@ exports = Class(GC.Application, function(supr) {
 		};
 
 		this._combo = new Combo(config.Combo[1]);
-		// this.scoreView.setText(this.model.currentscore);
 		this.heightView.setText(this.model.totalheight);
 		this.heightView.style.y = config.heightView.y + this.bgLayer.style.y;
 		this.timerView.reset();
@@ -262,7 +254,6 @@ exports = Class(GC.Application, function(supr) {
 		this.inputLayer.reset();
 
 		this._debugParallax = config.debugParallax;
-		this.game_pause = false;
 		this._heightDiff = 0;
 
 		this.ShowReadyGo();
@@ -275,14 +266,8 @@ exports = Class(GC.Application, function(supr) {
 	 */
 	var tickCount = 0;
 	this.tick = function(dt) {
-		if (this.game_pause || !this.model) 
+		if (!this.model) 
 			return;
-
-		// Update the scoreView by animating to the target score		
-		// if (this.model.currentscore < this.model.targetscore) {
-		// 	this.model.currentscore += 3;
-		// 	this.scoreView.setText(this.model.currentscore);
-		// }
 
 		// No need to update if the game is over of waits for restart
 		if (app.model.gameOver || app.isShowingReadyGo)
@@ -375,14 +360,8 @@ exports = Class(GC.Application, function(supr) {
 	this.onFallingFinished = function(hit) {
 		this.playerEntityPool.onFallingFinished(hit);
 		if (hit) {
-			if (this._activeTile.name == "tile_ice_yellow") {
-				effects.sparkle(this._activeTile, {duration: 200});
-				animate(this.view).wait(SQUISH_DURATION).then(bind(this, function() {
-					effects.stop();
-				}));
-			} else {
-				effects.squish(this._activeTile, {loop: false, duration: SQUISH_DURATION});
-			}
+			effects.squish(this._activeTile, {loop: false, duration: SQUISH_DURATION});
+
 			// Check if the landed tile has the same type with the current tile of the combo
 			if(this._activeTile.name == app._combo.getCurrentMenuID())
 			{
@@ -390,7 +369,7 @@ exports = Class(GC.Application, function(supr) {
 				if(app._combo.isFinishCombo())
 				{
 					app._combo.reset();
-					comboscore++;
+					app.model.comboscore++;
 				}
 			}else{
 				console.log("Not correct menu order"); 
@@ -431,7 +410,7 @@ exports = Class(GC.Application, function(supr) {
 			animate(this.view).wait(500).then(bind(this, function() {	
 				this._toConfirmRestart = true;
 			}));
-			app.playerEntityPool._koala.view.pause();
+			app.playerEntityPool._pinwheel.view.pause();
 		}
 	};
 
@@ -459,7 +438,7 @@ exports = Class(GC.Application, function(supr) {
 					this.gameOverLayer.style.visible = false;
 					this.gameOverLayer.style.opacity = 1;
 					this.isShowingReadyGo = false;
-					this.playerEntityPool._koala.view.startAnimation("blink", {});
+					this.playerEntityPool._pinwheel.view.startAnimation("blink", {});
 					this.playerEntityPool._initialY = this.playerEntityPool.getCurrentFrameMargin();
 					this.playerEntityPool._dotted_box.view.style.visible = true;
 				}));
@@ -494,22 +473,22 @@ var PlayerEntityPool = Class(EntityPool, function() {
 		sup.reset.call(this);
 	
 		this._dotted_box = this.obtain(config.playerEntityPool.dotted_box);
-		this._koala = this.obtain(config.playerEntityPool.koala);
-		this._blimp = this.obtain(config.playerEntityPool.blimp);
+		this._pinwheel = this.obtain(config.playerEntityPool.pinwheel);
+		this._pinwheelStick = this.obtain(config.playerEntityPool.pinwheelStick);
 		this._dotted_line = this.obtain(config.playerEntityPool.dotted_line);
 
-		this._koala_targetY = BG_HEIGHT;
+		this._pinwheel_targetY = BG_HEIGHT;
 		this._dotted_box.view.style.visible = false;
 
 		this._isWaitingForTap = true;
 		this._isMoving = false;	// Wait for the first tap to start moving
 		this._stepToParallaxUpdate = STEP_TO_UPDATE_PARALLAX;
-		this._playerOFFY = 0;	// This indicates the offset of koala when the parallax start moving up
+		this._playerOFFY = 0;	// This indicates the offset of pinwheel when the parallax start moving up
 		if (this._stepToParallaxUpdate == 0)
-			this._playerOFFY = this._koala.y;
+			this._playerOFFY = this._pinwheel.y;
 		this._height = 0;	// The total height
 
-		this._mainCharaterAnim = animate(this._koala);
+		this._mainCharaterAnim = animate(this._pinwheel);
 		this._mainCharaterAnim.clear();
 
 		this._dotted_line_animation = animate(this._dotted_line);
@@ -518,18 +497,17 @@ var PlayerEntityPool = Class(EntityPool, function() {
 	};
 	
 	this.update = function(dt) {
-
-		this._blimp.x = this._koala.x;
 		if (!app._activeTile._isFalling && app._activeTile.CanFall && !app._activeTile._isBouncingBack) {
-			app._activeTile.x = this._koala.x + (BG_WIDTH - app._activeTile.view.width) / 2 - config.player_offsetX;
+			app._activeTile.x = this._pinwheel.x + (BG_WIDTH - app._activeTile.view.width) / 2 - config.player_offsetX;
 		}
-		if (this._koala_targetY != BG_HEIGHT) { // this means player entities should be animated up
-			this._koala.y = this._koala.y + (this._dotted_line.y - this._dotted_line_offsetY);
+		if (this._pinwheel_targetY != BG_HEIGHT) { // this means player entities should be animated up
+			this._pinwheel.y = this._pinwheel.y + (this._dotted_line.y - this._dotted_line_offsetY);
 			this._dotted_box.y = this._dotted_box.y + (this._dotted_line.y - this._dotted_line_offsetY);
+			this._pinwheelStick.y = this._pinwheelStick.y;
 			this._dotted_line_offsetY = this._dotted_line.y;
-			if (this._koala.y <= this._koala_targetY) {
+			if (this._pinwheel.y <= this._pinwheel_targetY) {
 				this._dotted_line_animation.clear();
-				this._koala_targetY = BG_HEIGHT;
+				this._pinwheel_targetY = BG_HEIGHT;
 				if (this._playerOFFY == 0)
 					app.heightView.style.y = this._dotted_line.y - 40 + app.bgLayer.style.y;	// this view has relative position to the _dot_line (which is inside the bgLayer) 
 				// Here we start to receive input again + spawn new tile
@@ -540,7 +518,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 			} else {
 				if (this._stepToParallaxUpdate == 0) {
 					app.heightView.style.y = this._dotted_line.y - 40 + app.bgLayer.style.y;	// this view has relative position to the _dot_line (which is inside the bgLayer) 
-					this._playerOFFY = this._koala.y;
+					this._playerOFFY = this._pinwheel.y;
 				}
 			}
 		}
@@ -548,14 +526,14 @@ var PlayerEntityPool = Class(EntityPool, function() {
 		sup.update.call(this, dt);
 	};
 
-	this.animateKoala = function() {
+	this.animatepinwheel = function() {
 		this._mainCharaterAnim
-		.now({ x:  BG_WIDTH - this._koala.width}, MAIN_CHARATER_OSCILLATOR_DURATION, animate.easeOut)
-		.then({ x: (BG_WIDTH - this._koala.width) / 2}, MAIN_CHARATER_OSCILLATOR_DURATION, animate.easeIn)
+		.now({ x:  BG_WIDTH - this._pinwheel.width}, MAIN_CHARATER_OSCILLATOR_DURATION, animate.easeOut)
+		.then({ x: (BG_WIDTH - this._pinwheel.width) / 2}, MAIN_CHARATER_OSCILLATOR_DURATION, animate.easeIn)
 		.then({ x: 0 }, MAIN_CHARATER_OSCILLATOR_DURATION, animate.easeOut)
-		.then({ x: (BG_WIDTH - this._koala.width) / 2}, MAIN_CHARATER_OSCILLATOR_DURATION, animate.easeIn)
+		.then({ x: (BG_WIDTH - this._pinwheel.width) / 2}, MAIN_CHARATER_OSCILLATOR_DURATION, animate.easeIn)
 		.then(bind(this, function() {
-			this.animateKoala();
+			this.animatepinwheel();
 		}));
 	};
 
@@ -571,7 +549,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 			// Start moving the main character around x center
 			if (!this._isMoving) {
 				this._isMoving = true;
-				this.animateKoala();
+				this.animatepinwheel();
 			}
 			
 			// if the active tile is a blue star, stop moving
@@ -579,7 +557,11 @@ var PlayerEntityPool = Class(EntityPool, function() {
 				this._mainCharaterAnim.pause();
 			}
 			
-			this._koala.view.startAnimation("drop", {});
+			// Flash energy
+			app.kfcMan.energy.style.visible = true;
+			animate(app.kfcMan.energy).now({ visible: false }, 200);
+
+			this._pinwheel.view.startAnimation("drop", {});
 		}
 	};
 
@@ -588,7 +570,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 			return;
 
 		// Update the new position
-		this._koala_targetY = this._koala.y + app._heightDiff;
+		this._pinwheel_targetY = this._pinwheel.y + app._heightDiff;
 		this._dotted_line_offsetY = this._dotted_line.y;
 
 		// This one is actually a hack, -0.1 to be sure that the main character will reach its target above
@@ -598,7 +580,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 	};
 
 	this.getScreenY = function() {
-		return this._koala.y - this._playerOFFY;
+		return this._pinwheel.y - this._playerOFFY;
 	};
 
 	this.revertVX = function() {
@@ -606,7 +588,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 	};
 
 	this.getCurrentFrameMargin = function() {
-		var view = this._koala.view;
+		var view = this._pinwheel.view;
 		var img = view.getFrame(view._currentAnimationName, view._currentFrame);
 		var imgMap = img && img.getMap();
 		var offY = config.player_scale * (imgMap && imgMap.marginBottom) || 0;
@@ -879,8 +861,8 @@ var PlayerEntityPool = Class(EntityPool, function() {
  		else
  			this._zIndex++;
 
-		var offsetX = (BG_WIDTH - type.viewOpts.width) / 2 - config.player_offsetX + app.playerEntityPool._koala.x;
-		var offsetY = app.playerEntityPool._koala.y + config.tile_ralativeY - type.viewOpts.height / 2;
+		var offsetX = (BG_WIDTH - type.viewOpts.width) / 2 - config.player_offsetX + app.playerEntityPool._pinwheel.x;
+		var offsetY = app.playerEntityPool._pinwheel.y + config.tile_ralativeY - type.viewOpts.height / 2;
 		type = merge({x: offsetX, y: offsetY, viewOpts: merge({zIndex: this._zIndex}, type.viewOpts)}, type); 	
 
 		return type;
@@ -896,7 +878,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 			var _width = app._activeTile.view.width;
 			app._activeTile.view.width = 0;
 			app._activeTile.view.height = 0;
-			app._activeTile.vy = app.playerEntityPool._koala.vy;
+			app._activeTile.vy = app.playerEntityPool._pinwheel.vy;
 
 			animate(app._activeTile.view).now({width: _width, height: type.viewOpts.height}, 200).then(function() {
 				// As the new tile is ready, we wait for new tap
@@ -936,37 +918,14 @@ var TimerView = Class(View, function() {
 		this._timer_full = new ImageView(merge({superview: this._timer_full_parent}, config.timerView.timer_full));
 		this._timer_empty = new ImageView(merge({superview: this}, config.timerView.timer_empty));
 		this._timer_number = new ScoreView(merge({parent: this, x: 196, y: 5, zIndex: 1000}, config.timerView.number));
-		this._pause_button = new ImageView(merge({parent: app.view, x: BG_WIDTH - 105, y: 165}, config.pause_button));
+		this._switch_button = new ImageView(merge({parent: app.view, x: BG_WIDTH - 105, y: 165}, config.switch_button));
 
-		this._pause_button.on("InputSelect", bind(this, function() {
-			this._pause_button.setImage("resources/images/kfc/Switch_Button.png");
-			animate(this._pause_button).wait(50).then(bind(this, function() {
-				this._pause_button.setImage("resources/images/kfc/Switch_Button_touched.png");
+		this._switch_button.on("InputSelect", bind(this, function() {
+			this._switch_button.setImage("resources/images/kfc/Switch_Button.png");
+			animate(this._switch_button).wait(50).then(bind(this, function() {
+				this._switch_button.setImage("resources/images/kfc/Switch_Button_touched.png");
 				app._activeTile.transform();
 			}));
-			// if (app.model.gameOver || app.isShowingReadyGo)
-			// 	return;
-			// this._pause_button.setImage("resources/images/game/UI/button_pause_pressed.png");
-			// animate(this._pause_button).wait(50).then(bind(this, function() {
-			// 	this._pause_button.setImage("resources/images/game/UI/button_pause.png");
-			// 	app.game_pause = !app.game_pause;
-
-			// 	if (app.game_pause) {
-			// 		app.gameOverLayer.style.opacity = 0.5;
-			// 		app.gameOverLayer.style.visible = true;
-			// 		animate(app.gameOverLayer).now({ opacity: 1 }, 500);
-			// 		app.playerEntityPool._mainCharaterAnim.pause();
-			// 		app.playerEntityPool._koala.view.pause();
-			// 	}
-			// 	else {
-			// 		animate(app.gameOverLayer).now({ opacity: 0 }, 500).then(function() {
-			// 			app.gameOverLayer.style.visible = false;
-			// 			app.gameOverLayer.style.opacity = 1;
-			// 			app.playerEntityPool._mainCharaterAnim.resume();
-			// 			app.playerEntityPool._koala.view.resume();	
-			// 		});
-			// 	}
-			// }));
 		}));
 
 		this._timeIcon = new ImageView({
@@ -1121,7 +1080,7 @@ var InputView = Class(View, function() {
 	};
 
 	this.onInputSelect = function(evt, pt) { 
-		if (!app.model.gameOver && !app.isShowingReadyGo && !app.game_pause)
+		if (!app.model.gameOver && !app.isShowingReadyGo)
 			app.playerEntityPool.onInputSelect();
 		else if (app._toConfirmRestart) {
 			app._toConfirmRestart = false;
@@ -1172,8 +1131,8 @@ var Combo = Class(function(supr) {
 
 	this.increaseIndex = function() {
 		this._currentMenuID++;
-		if (this._currentMenuID - 1 > 0) {
-			var menu = "menu" + this._currentMenuID;
+		if (this._currentMenuID - 1 >= 0) {
+			var menu = "menu" + (this._currentMenuID - 1);
 			app.mainUI.ComboMenu[menu].updateState("completed");
 		}	
 		menu = "menu" + this._currentMenuID;

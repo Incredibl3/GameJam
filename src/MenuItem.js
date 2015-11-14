@@ -19,7 +19,7 @@ exports = Class(ImageView, function(supr) {
 		if (state == "disabled") {
 			this.setImage(this.disabledImage);
 		} else if (state == "completed") {
-			this.setImage(this.completeImage)
+			this.setImage(this.completeImage);
 		} else {
 			this.setImage(this.image);
 		}
