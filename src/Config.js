@@ -139,7 +139,7 @@ exports = {
         height: 82,
         x: 240,
         y: 205,
-        image: "resources/images/kfc/enegy.png"
+        image: "resources/images/kfc/Enegy.png"
       }
     ]
   },

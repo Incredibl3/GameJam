@@ -804,7 +804,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 
  	this.reset = function() {		
  		sup.reset.call(this);
- 		this._zIndex = 0;
+ 		this._zIndex = 300;
  		this.spawn();
  		app._activeTile._isFirst = true;
  		// And we recalculate the dotted_box
