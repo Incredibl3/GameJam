@@ -247,7 +247,6 @@ exports = Class(GC.Application, function(supr) {
 		this.timerView.reset();
 		this.timerView._switch_button.style.visible = false;
 
-		this._isStarActive = 0;
 		this.elementLayer.style.y = 0;
 		this.parallax.reset(config.backgroundLayers);
 		this.playerEntityPool.reset();
@@ -383,10 +382,6 @@ exports = Class(GC.Application, function(supr) {
 			this.timerView.addTime();
 		} else {
 			app._combo.reset();
-			if (this._isStarActive > 0) {
-				this._isStarActive = 0;
-				this.playerEntityPool.revertVX();
-			}
 		}
 	};
 
@@ -395,11 +390,6 @@ exports = Class(GC.Application, function(supr) {
 			app._combo.increaseIndex();
 			this.tileObjects.spawn();
 		}
-	}
-
-	this.startStarFall = function() {
-		this._isStarActive = 4;
-
 	}
 
 	this.gameOver = function() {
@@ -555,11 +545,6 @@ var PlayerEntityPool = Class(EntityPool, function() {
 			if (!this._isMoving) {
 				this._isMoving = true;
 				this.animatepinwheel();
-			}
-			
-			// if the active tile is a blue star, stop moving
-			if (app._isStarActive == 4) {
-				this._mainCharaterAnim.pause();
 			}
 			
 			// Flash energy
@@ -757,13 +742,6 @@ var PlayerEntityPool = Class(EntityPool, function() {
 		}
  	};
 
- 	this.isStar = function() {
- 		if ( (this.name == "tile_star_blue") || (this.name == "tile_star_green") || (this.name == "tile_star_purple") || (this.name == "tile_star_yellow") )
- 			return true;
-
- 		return false;
- 	}
-
  	this.onFallingFinished = function() {
  		this.CanFall = false;
  		this._isFalling = false;
@@ -806,11 +784,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 			// The target should be app._topTile.y + app._topTile.model.offsetY
 			var distance = (app._topTile.y + app._topTile.model.offsetY) - (this.y + this.model.offsetY + this.model.height);
 
-			// Let's say the duration is 20 frame
-			if (!this.isStar())
-				this.ay = distance * 2 / (16 * 20) / (16 * 20);
-			else 
-				this.ay = distance * 2 / (16 * 10) / (16 * 10);
+			this.ay = distance * 2 / (16 * 20) / (16 * 10);
 
 			this._targetY = (app._topTile.y + app._topTile.model.offsetY) - (this.model.offsetY + this.model.height);
 		}
@@ -845,33 +819,8 @@ var PlayerEntityPool = Class(EntityPool, function() {
  	};
 
  	this.caclulateOpts = function() {
- 		var type;
- 		
- 		if (app._isStarActive > 1) {
- 			app._isStarActive --;
- 			type = config.tileObjects.types[config.tileObjects.types.length - app._isStarActive];
- 		} else {
- 			var done = false;
-	 		while (!done) {
-	 			done = true;
-	 			// Limit the rate of star to 10% only
-	 			// var star_ok = (Math.floor(Math.random() * 100) > 50);
-	 			var star_ok = false;
-	 			type = config.tileObjects.types[Math.floor(Math.random() * (config.tileObjects.types.length))];
-	 			if (type.id == "tile_star_blue" && (app.playerEntityPool._stepToParallaxUpdate > -5 || !star_ok)) done = false;
-	 		}
-
-	 		if (app._isStarActive == 1) {
-	 			app._isStarActive = 0;
-	 			app.playerEntityPool.revertVX();
-	 		}
- 		}
- 		
- 		if (type.id == "tile_star_blue") 
- 			app.startStarFall();
- 		// type = app._combo.Next(config.tileObjects.types);
-
-
+ 		var type = config.tileObjects.types[Math.floor(Math.random() * (config.tileObjects.types.length))];
+ 			
  		this._zIndex++;
 
 		var offsetX = (BG_WIDTH - type.viewOpts.width) / 2 - config.player_offsetX + app.playerEntityPool._pinwheel.x;
@@ -887,19 +836,17 @@ var PlayerEntityPool = Class(EntityPool, function() {
 		app._activeTile = this.obtain(type);
 		app._activeTile._initialY = app._activeTile.view.style.y;
  		app.playerEntityPool._dotted_box.y = app.playerEntityPool._dotted_box._initialY = app._activeTile.y + (app._activeTile.height / 2 - app.playerEntityPool._dotted_box.height / 2) / 2;
-		if (!app._activeTile.isStar()) {
-			var _width = app._activeTile.view.width;
-			app._activeTile.view.width = 0;
-			app._activeTile.view.height = 0;
-			app._activeTile.vy = app.playerEntityPool._pinwheel.vy;
+		
+		var _width = app._activeTile.view.width;
+		app._activeTile.view.width = 0;
+		app._activeTile.view.height = 0;
+		app._activeTile.vy = app.playerEntityPool._pinwheel.vy;
 
-			animate(app._activeTile.view).now({width: _width, height: type.viewOpts.height}, 200).then(function() {
-				// As the new tile is ready, we wait for new tap
-				app.playerEntityPool._isWaitingForTap = true;
-			});
-		} else {
+		animate(app._activeTile.view).now({width: _width, height: type.viewOpts.height}, 200).then(function() {
+			// As the new tile is ready, we wait for new tap
 			app.playerEntityPool._isWaitingForTap = true;
-		}
+		});
+		
 
 		SHOW_HIT_BOUNDS && app._activeTile.view.showHitBounds();
  	};
