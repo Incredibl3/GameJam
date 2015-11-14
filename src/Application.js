@@ -119,49 +119,13 @@ exports = Class(GC.Application, function(supr) {
 		this.goTxt.style.visible = false;
 
 		//Select Combo View
-		this.selectComboView = new View({
+		this.mainmenu = new MainMenu(merge({
 			parent: this.view,
 			y: this.view.style.height - BG_HEIGHT,
-			width: BG_WIDTH,
-			height: BG_HEIGHT,
-			zIndex: 2000
-		});
-		this.selectComboView.style.backgroundColor = "#FFFFFF";
-		this.selectComboView.style.visible = true;
-
-		this.combo1Button = new ButtonView({
-	      superview: this.selectComboView,
-	      width: 200,
-	      height: 60,
-	      x: BG_WIDTH / 2 - 100,
-	      y: 250,
-	      backgroundColor : "#7f8c8d",
-	      scaleMethod: "9slice",
-	      sourceSlices: {
-	        horizontal: {left: 80, center: 116, right: 80},
-	        vertical: {top: 10, middle: 80, bottom: 10}
-	      },
-	      destSlices: {
-	        horizontal: {left: 40, right: 40},
-	        vertical: {top: 4, bottom: 4}
-	      },
-	      title: "Combo 1",
-	      text: {
-	        color: "#000044",
-	        size: 16,
-	        autoFontSize: false,
-	        autoSize: false
-	      },
-	      on:{
-	            up: bind(this, "onCombo1")
-	      }
-	    });
-
-		this.onCombo1 = function() {
-			animate(this.selectComboView).now({ opacity: 0 }, 400);
-			this.selectComboView.style.visible = false;
-		    app.reset();
-		}
+		}, config.MainMenu));
+		this.mainmenu.style.visible = true;
+		uiInflater.addChildren(config.MainMenu.children, this.mainmenu);
+		this.mainmenu.buildView();
 
 		// blocks player input to avoid traversing game elements' view hierarchy
 		this.bgLayer = new View({
@@ -662,11 +626,11 @@ var PlayerEntityPool = Class(EntityPool, function() {
  		var type;
  		var done = false;
  		while (!done) {
- 			type = app.tileObjects.caclulateOpts();	
+ 			type = app.tileObjects.calculateOpts();	
  			console.log("Candidate type: " + type.id);
  			var array = app._combo._menuArray;
 			for (var i = 0; i < array.length; i++) {
-				// console.log("Current Menu: " + i + " is: " + array[i].id);
+				console.log("		Current Menu: " + i + " is: " + array[i].id);
 
 				if (type.id == array[i].id && type.id != this.name) done = true;
 			}
@@ -767,10 +731,11 @@ var PlayerEntityPool = Class(EntityPool, function() {
 
  		this._isBouncingBack = true;
 
- 		if (app._topTile && app._topTile.zTop >= this.zBottom)
- 			app.tileObjects._zIndex++;
- 		else
- 			app.tileObjects._zIndex--; 		
+ 		// if (app._topTile && app._topTile.zTop >= this.zBottom)
+ 		// 	app.tileObjects._zIndex++;
+ 		// else
+ 		// 	app.tileObjects._zIndex--; 		
+  		app.tileObjects._zIndex--;
  	};
 
  	this.startFalling = function() {
@@ -804,7 +769,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 
  	this.reset = function() {		
  		sup.reset.call(this);
- 		this._zIndex = 300;
+ 		this._zIndex = 1000;
  		this.spawn();
  		app._activeTile._isFirst = true;
  		// And we recalculate the dotted_box
@@ -818,13 +783,9 @@ var PlayerEntityPool = Class(EntityPool, function() {
  		sup.update.call(this, dt);
  	};
 
- 	this.caclulateOpts = function() {
+ 	this.calculateOpts = function() {
  		var type = config.tileObjects.types[Math.floor(Math.random() * (config.tileObjects.types.length))];
- 			
- 		if(app._topTile && app._topTile.zTop >= type.zBottom)
- 			this._zIndex--;
- 		else
- 			this._zIndex++;
+  		this._zIndex--;
 
 		var offsetX = (BG_WIDTH - type.viewOpts.width) / 2 - config.player_offsetX + app.playerEntityPool._pinwheel.x;
 		var offsetY = app.playerEntityPool._pinwheel.y + config.tile_ralativeY - type.viewOpts.height / 2;
@@ -834,7 +795,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
  	}
 
  	this.spawn = function(opts) {
- 		var type = opts || this.caclulateOpts();
+ 		var type = opts || this.calculateOpts();
  		
 		app._activeTile = this.obtain(type);
 		app._activeTile._initialY = app._activeTile.view.style.y;
@@ -1065,7 +1026,9 @@ var Combo = Class(function(supr) {
 
 	this.reset = function(opts) {
 		this._currentMenuID = -1;
-		this._menuArray = config.Combo[1].menus;
+		var ran = Math.random() * 3 | 0;
+		console.log("random ra " + ran);
+		this._menuArray = config.Combo[ran].menus;
 
 		this.shuffleComboArray(this._menuArray);
 	};
@@ -1111,4 +1074,21 @@ var Combo = Class(function(supr) {
 	this.isFinishCombo = function(){
 		return this._currentMenuID == this._menuArray.length - 1;
 	};
+});
+
+var MainMenu = Class(View, function() {
+	var sup = View.prototype;
+
+	this.init = function(opts) {
+		sup.init.call(this, opts);
+	};
+
+	this.buildView = function() {
+		this.mmbutton.onClick = bind(this, function() {
+			animate(this).now({ opacity: 0 }, 400).then(bind(this, function() {
+				this.style.visible = false;
+				app.reset();
+			}));
+		});		
+	}
 });

@@ -34,6 +34,72 @@ exports = {
   falling_offsetY: FALLING_OFFSETY,
   yAdjustment: PLAYER_OFFSETY_ADJUSTMENT,
   gameOverDelay: 3000,
+  MainMenu: {
+    name: "MainMenu",
+    x: 0,
+    width: BG_WIDTH,
+    height: BG_HEIGHT,
+    zIndex: 2000,
+    children: [
+      {
+        name: "mainbg",
+        cls: "ui.ImageView",
+        width: BG_WIDTH,
+        height: BG_HEIGHT,
+        x: 0,
+        y: 0,
+        image: "resources/images/kfc/MainMenu/Main_BG.png"            
+      },
+      {
+        name: "mmtitle",
+        cls: "ui.ImageView",
+        width: BG_WIDTH,
+        height: 187,
+        x: 0,
+        y: 0,
+        image: "resources/images/kfc/MainMenu/Main_Title.png"            
+      },
+      {
+        name: "combo0",
+        cls: "ui.ImageView",
+        width: BG_WIDTH,
+        height: 325,
+        x: 0,
+        y: 187,
+        image: "resources/images/kfc/MainMenu/ClassicCombos_able.png"         
+      },
+      {
+        name: "combo1",
+        cls: "ui.ImageView",
+        width: BG_WIDTH,
+        height: 371,
+        x: 0,
+        y: 362,
+        image: "resources/images/kfc/MainMenu/Chicken_Little_Combo_able.png"
+      },
+      {
+        name: "combo2",
+        cls: "ui.ImageView",
+        width: BG_WIDTH,
+        height: 262,
+        x: 0,
+        y: 623,
+        image: "resources/images/kfc/MainMenu/Combo1_able.png"            
+      },           
+      {
+        name: "mmbutton",
+        cls: "ui.widget.ButtonView",
+        width: 197,
+        height: 74,
+        x: (BG_WIDTH - 197) / 2,
+        y: BG_HEIGHT - 74 * 2,
+        images: {
+          "up": "resources/images/kfc/MainMenu/PlayButton.png",
+          "down": "resources/images/kfc/MainMenu/PlayButton.png"
+        }
+      }      
+    ]
+  },
   MainUI: {
     name: 'UILayout',
     x: 0,
@@ -66,9 +132,6 @@ exports = {
             height: 105,
             x: 0,
             y: 0,
-            // image: "resources/images/kfc/burger_able.png",
-            // completeImage: "resources/images/kfc/burger_Completed.png",
-            // disabledImage: "resources/images/kfc/burger_disable.png"
           },
           {
             name: "menu1",
@@ -77,9 +140,6 @@ exports = {
             height: 105,
             x: 0,
             y: 0,
-            // image: "resources/images/kfc/potato_able.png",
-            // completeImage: "resources/images/kfc/potato_Completed.png",
-            // disabledImage: "resources/images/kfc/potato_disable.png"
           },
           {
             name: "menu2",
@@ -88,9 +148,6 @@ exports = {
             height: 105,
             x: 0,
             y: 0,
-            // image: "resources/images/kfc/pepsi_able.png",
-            // completeImage: "resources/images/kfc/pepsi_Completed.png",
-            // disabledImage: "resources/images/kfc/pepsi_disable.png"
           },
           {
             name: "menu3",
@@ -99,9 +156,6 @@ exports = {
             height: 105,
             x: 0,
             y: 0,
-            // image: "resources/images/kfc/popcorn_able.png",
-            // completeImage: "resources/images/kfc/popcorn_Completed.png",
-            // disabledImage: "resources/images/kfc/popcorn_disable.png"
           }
         ]       
       },
@@ -332,17 +386,7 @@ exports = {
   ],
   Combo: [
     {
-      name: "combo1",
-      menus: [
-        "tile_godzilla",
-        "tile_jelly",
-        "tile_kong",
-        "tile_squid",
-        "tile_wolf"
-      ]
-    },
-    {
-      name: "combo2",
+      name: "classic",
       menus: [
         {
           id: "tile_burger",
@@ -371,14 +415,61 @@ exports = {
       ]
     },
     {
-      name: "combo3",
+      name: "chickenlittles",
       menus: [
-        "tile_godzilla",
-        "tile_jelly",
-        "tile_kong",
-        "tile_jelly",
-        "tile_godzilla",
-        "tile_kong"
+        {
+          id: "tile_double_burger",
+          image: "resources/images/kfc/Combo_Item/double_burger_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/double_burger_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/double_burger_disable.png"          
+        },
+        {
+          id: "tile_potato",
+          image: "resources/images/kfc/Combo_Item/potato_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/potato_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/potato_disable.png"
+        },
+        {
+          id: "tile_pepsi",
+          image: "resources/images/kfc/Combo_Item/pepsi_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/pepsi_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/pepsi_disable.png"
+        },
+        {
+          id: "tile_icecream",
+          image: "resources/images/kfc/Combo_Item/icecream_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/icecream_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/icecream_disable.png"          
+        }      
+      ]
+    },
+    {
+      name: "combo1",
+      menus: [
+        {
+          id: "tile_big_burger",
+          image: "resources/images/kfc/Combo_Item/big_burger_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/big_burger_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/big_burger_disable.png"          
+        },
+        {
+          id: "tile_potato",
+          image: "resources/images/kfc/Combo_Item/potato_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/potato_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/potato_disable.png"
+        },
+        {
+          id: "tile_pepsi",
+          image: "resources/images/kfc/Combo_Item/pepsi_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/pepsi_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/pepsi_disable.png"
+        },
+        {
+          id: "tile_thigh",
+          image: "resources/images/kfc/Combo_Item/thigh_able.png",
+          completeImage: "resources/images/kfc/Combo_Item/thigh_Completed.png",
+          disabledImage: "resources/images/kfc/Combo_Item/thigh_disable.png"          
+        }
       ]
     }
   ],
@@ -450,7 +541,7 @@ exports = {
   tileObjects: {
   	types: [
   		{
-  			id: "tile_bigburger",
+  			id: "tile_big_burger",
         zTop: 1,
         zBottom: 0,
 			  x: (BG_WIDTH - 136 * TILE_SCALE) / 2,
