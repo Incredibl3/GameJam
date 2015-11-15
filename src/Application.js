@@ -66,7 +66,7 @@ exports = Class(GC.Application, function(supr) {
 		this.setScreenDimensions(BG_WIDTH > BG_HEIGHT);
 
 		// accepts and interprets player input
-		this.inputLayer = new InputView({ parent: this.view, zIndex: 2 });
+		this.inputLayer = new InputView({ parent: this.view, zIndex: 999});
 
 		// a 0.5 opacity dark overley at game over
 		this.gameOverLayer = new View({
@@ -154,6 +154,16 @@ exports = Class(GC.Application, function(supr) {
 			superview: this.mainUI
 		});
 		
+		// Tutorial Image
+		this.tutorial = new ImageView({
+			superview: this.gameOverLayer,
+			x: 0,
+			y: 0,
+			width: BG_WIDTH,
+			height: BG_HEIGHT,
+			image: "resources/images/kfc/Tutorial_page3.png"
+		});
+		this.tutorial.style.visible = false;
 
 		// The parallax that holds all background objects
 		this.parallax = new Parallax({ parent: this.bgLayer });
@@ -229,7 +239,13 @@ exports = Class(GC.Application, function(supr) {
 		this._debugParallax = config.debugParallax;
 		this._heightDiff = 0;
 
-		this.ShowReadyGo();
+		var ShowReadyGo = (data && !data.tut) || false;
+		if (ShowReadyGo) {
+			this.ShowReadyGo();
+		} else {
+			this.ShowTutorial();
+		}
+		
 	};
 
 	/**
@@ -243,7 +259,7 @@ exports = Class(GC.Application, function(supr) {
 			return;
 
 		// No need to update if the game is over of waits for restart
-		if (app.model.gameOver || app.isShowingReadyGo)
+		if (app.model.gameOver || app.isShowingReadyGo || app.isShowingTutorial)
 			return;
 
 		// TimerView should be update normally
@@ -383,9 +399,32 @@ exports = Class(GC.Application, function(supr) {
 		this.gameOverLayer.style.visible = false;
 		this.gameOverTxt.style.visible = false;
 		this.gameOverTxt.style.y = -345;
-		this.ShowReadyGo();
-		this.reset();
+
+		this.reset({tut: false});
 	};
+
+	this.ShowTutorial = function() {
+		console.log("Showing tutorial");
+		this.isShowingTutorial = true;
+		this.isHidingTut = false;
+		this.gameOverLayer.style.visible = true;
+		this.tutorial.style.visible = true;
+	};
+
+	this.HideTutotial = function() {
+		if (this.isHidingTut == false) {
+			this.isHidingTut = true;
+		} else
+			return;
+
+		animate(this.tutorial).now({opacity: 0}, 400).then(bind(this, function() {
+			this.tutorial.style.opacity = 1;
+			this.tutorial.style.visible = false;
+			this.isShowingTutorial = false;
+			this.isHidingTut = false;
+			this.ShowReadyGo();
+		}))		
+	}
 
 	this.ShowReadyGo = function() {
 		this.isShowingReadyGo = true;
@@ -1016,6 +1055,13 @@ var InputView = Class(View, function() {
 	};
 
 	this.onInputSelect = function(evt, pt) { 
+		console.log("onInputSelect 1111");
+		if (app.isShowingTutorial) {
+			console.log("onInputSelect");
+			app.HideTutotial();
+			return;
+		}
+
 		if (!app.model.gameOver && !app.isShowingReadyGo)
 			app.playerEntityPool.onInputSelect();
 		else if (app._toConfirmRestart) {
