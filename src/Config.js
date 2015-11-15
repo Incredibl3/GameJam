@@ -169,7 +169,7 @@ exports = {
         image: "resources/images/kfc/MainMenu/Pop-up contact.png"            
       },
       {
-        name: "gameovertxt",
+        name: "submitButton",
         cls: "ui.widget.ButtonView",
         centerX: true,
         x: 350,

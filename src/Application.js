@@ -36,7 +36,7 @@ var BG_HEIGHT = config.bgHeight;
 var STEP_TO_UPDATE_PARALLAX = config.parallaxStep;
 var SHOW_HIT_BOUNDS = false;
 var GAME_OVER_DELAY = config.gameOverDelay;
-var MAX_TIME = 90000;
+var MAX_TIME = 2000;
 var TIMER_WIDTH = 402;
 var TIMER_MARGIN = 0;
 var TIMER_REAL_WIDTH = TIMER_WIDTH - 2 * TIMER_MARGIN; // Remove Margin
@@ -145,9 +145,12 @@ exports = Class(GC.Application, function(supr) {
 		this.mainUI = new View(merge({ parent: this.bgLayer, zIndex: 1000, y: BG_HEIGHT - this.view.style.height }, config.MainUI));
 		uiInflater.addChildren(config.MainUI.children, this.mainUI);
 
-		this.gameoverscreen = new View(merge({ parent: this.gameOverLayer, zIndex: 1001, y: BG_HEIGHT - this.view.style.height }, config.GameOver));
+		this.gameoverscreen = new View(merge({ parent: this.inputLayer, zIndex: 1001, y: BG_HEIGHT - this.view.style.height }, config.GameOver));
 		uiInflater.addChildren(config.GameOver.children, this.gameoverscreen);
 		this.gameoverscreen.style.visible = false;
+		this.gameoverscreen.submitButton.onInputSelect = bind(this, function() {
+			app.restart();
+		});
 
 		// KFC Man layout
 		this.kfcMan = new View(merge({ parent: this.bgLayer, zIndex: 1000}, config.kfcMan));
@@ -470,6 +473,7 @@ exports = Class(GC.Application, function(supr) {
 
 	this.restart = function() {
 		this.gameOverLayer.style.visible = false;
+		this.gameoverscreen.style.visible = false;
 		this.gameOverTxt.style.visible = false;
 		this.gameOverTxt.style.y = -345;
 
@@ -1152,10 +1156,10 @@ var InputView = Class(View, function() {
 
 		if (!app.model.gameOver && !app.isShowingReadyGo)
 			app.playerEntityPool.onInputSelect();
-		else if (app._toConfirmRestart) {
-			app._toConfirmRestart = false;
-			app.restart();
-		}
+		// else if (app._toConfirmRestart) {
+		// 	app._toConfirmRestart = false;
+		// 	app.restart();
+		// }
 	};
 });
 
