@@ -354,9 +354,9 @@ exports = {
       yLimitMax: BG_HEIGHT / 16,
       pieceOptions: [
         {
-          styleRanges: { x: [0 - 400 * CLOUD_SCALE / 2, BG_WIDTH / 2 - 400 * CLOUD_SCALE / 2] },
-          width: 122,
-          height: 44,
+          styleRanges: { x: [0 - 250 * CLOUD_SCALE / 2, BG_WIDTH / 2 - 250 * CLOUD_SCALE / 2] },
+          width: 122 * 2,
+          height: 44 * 2,
           image: "resources/images/kfc/Cloud_2.png"
         }    
       ]
@@ -375,34 +375,34 @@ exports = {
       yLimitMax: - BG_HEIGHT / 16,
       pieceOptions: [
         {
-          styleRanges: { x: [0 - 400 * CLOUD_SCALE / 2, BG_WIDTH / 2 - 400 * CLOUD_SCALE / 2] },
-          width: 122,
-          height: 44,
+          styleRanges: { x: [0 - 250 * CLOUD_SCALE / 2, BG_WIDTH / 2 - 250 * CLOUD_SCALE / 2] },
+          width: 122 * 2,
+          height: 44 * 2,
           image: "resources/images/kfc/Cloud_2.png"
         } 
       ]
     },    
-    {
-      id: 'cloud2',
-      spawnCount: 20,
-      xMultiplier: 0, // To make it move, use xVelocity
-      xCanSpawn: false,
-      xCanRelease: false,
-      xVelocity: 10,
-      yMultiplier: 0.25,
-      yCanSpawn: true,
-      yCanRelease: false,
-      yGapRange: [300, 400],
-      yLimitMax: BG_HEIGHT / 8,
-      pieceOptions: [
-        {
-          // styleRanges: { x: [0, BG_WIDTH * 0.25] },
-          width: 337 * CLOUD_SCALE,
-          height: 123 * CLOUD_SCALE,
-          image: "resources/images/kfc/Cloud_1.png"
-        }
-      ]
-    },
+    // {
+    //   id: 'cloud2',
+    //   spawnCount: 20,
+    //   xMultiplier: 0, // To make it move, use xVelocity
+    //   xCanSpawn: false,
+    //   xCanRelease: false,
+    //   xVelocity: 10,
+    //   yMultiplier: 0.25,
+    //   yCanSpawn: true,
+    //   yCanRelease: false,
+    //   yGapRange: [200, 400],
+    //   yLimitMax: BG_HEIGHT / 8,
+    //   pieceOptions: [
+    //     {
+    //       // styleRanges: { x: [0, BG_WIDTH * 0.25] },
+    //       width: 337 * CLOUD_SCALE,
+    //       height: 123 * CLOUD_SCALE,
+    //       image: "resources/images/kfc/Cloud_1.png"
+    //     }
+    //   ]
+    // },
     {
       id: 'clould3',
       spawnCount: 20,
@@ -413,8 +413,8 @@ exports = {
       yMultiplier: 0.2,
       yCanSpawn: true,
       yCanRelease: false,
-      yGapRange: [350, 550],
-      yLimitMax: - BG_HEIGHT / 4,
+      yGapRange: [250, 350],
+      yLimitMax: BG_HEIGHT / 3,
       pieceOptions: [
         {
           // styleRanges: { x: [BG_WIDTH * 0.75, BG_WIDTH] },
@@ -852,8 +852,8 @@ exports = {
     }
   },
   switch_button: {
-      x: 0,
-      y: BG_HEIGHT - 96,
+      x: BG_WIDTH - 96,
+      y: 650,
       zIndex: 1000,
       width: 92,
       height: 96,

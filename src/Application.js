@@ -16,6 +16,7 @@ import parallax.Parallax as Parallax;
 import ui.resource.loader as loader;
 import effects;
 import src.lib.uiInflater as uiInflater;
+import AudioManager;
 
 import ui.TextEditView;
 import ui.TextPromptView;
@@ -199,7 +200,43 @@ exports = Class(GC.Application, function(supr) {
 				logger.log ("onBackButton clicked!!!");
 				GLOBAL.NATIVE.sendActivityToBack();
 			});
-		}
+		};
+
+		this.coolTxt = new ImageView({
+			superview: this.kfcMan,
+	        width: 206,
+	        height: 100,
+	        x: 240,
+	        y: 85,
+			anchorX: 103,
+			anchorY: 50,
+			image: "resources/images/kfc/Cool.png"
+		});
+		this.coolTxt.style.visible = false;
+
+		this.greatTxt = new ImageView({
+			superview: this.kfcMan,
+	        width: 254,
+	        height: 114,
+	        x: 240,
+	        y: 85,
+			anchorX: 127,
+			anchorY: 57,
+			image: "resources/images/kfc/Great.png"
+		});
+		this.greatTxt.style.visible = false;
+
+		this.perfectTxt = new ImageView({
+			superview: this.kfcMan,
+	        width: 271,
+	        height: 58,
+	        x: 200,
+	        y: 85,
+			anchorX: 135.5,
+			anchorY: 29,
+			image: "resources/images/kfc/Perfect.png"
+		});
+		this.perfectTxt.style.visible = false;
 	};
 
 	/**
@@ -314,6 +351,29 @@ exports = Class(GC.Application, function(supr) {
 			}
 
 			if (collidedWidth/this._topTile.width > 0.6) {	// A hard collision happens when the collided surfact is large than 60% of the width
+				// Show text
+				var col = collidedWidth/this._topTile.width;
+				animate(this.coolTxt).clear();
+				this.coolTxt.style.visible = false;
+				animate(this.greatTxt).clear();
+				this.greatTxt.style.visible = false;
+				animate(this.perfectTxt).clear();
+				this.perfectTxt.style.visible = false;
+				var view;
+				if (col > 0.6 && col < 0.75) {
+					view = this.coolTxt;
+				} else if (col >= 0.75 && col < 0.9) {
+					view = this.greatTxt;
+				} else if (col >= 0.9) {
+					view = this.perfectTxt;
+				}
+				
+				view.style.scale = 0.1;
+				view.style.visible = true;
+				animate(view).now({scale: 0.75}, 500).then(function() {
+					view.style.visible = false;
+				});
+
 				// End of falling action of the tile
 				this._activeTile.onFallingFinished();
 				this._heightDiff = -this._activeTile.height;
@@ -906,7 +966,7 @@ var TimerView = Class(View, function() {
 		this._timer_full = new ImageView(merge({superview: this._timer_full_parent}, config.timerView.timer_full));
 		this._timer_empty = new ImageView(merge({superview: this}, config.timerView.timer_empty));
 		this._timer_number = new ScoreView(merge({parent: this, x: 196, y: 5, zIndex: 1000}, config.timerView.number));
-		this._switch_button = new ImageView(merge({parent: app.view, x: 0, y: 165}, config.switch_button));
+		this._switch_button = new ImageView(merge({parent: app.view}, config.switch_button));
 
 		this._switch_button.on("InputSelect", bind(this, function() {
 			this._switch_button.setImage("resources/images/kfc/Switch_Button.png");
@@ -928,7 +988,20 @@ var TimerView = Class(View, function() {
 			height: 35,
 			image: "resources/images/game/UI/time_icon_0001.png"
 		});
-		this._timeIconAnimation = animate(this._timeIcon);		
+		this._timeIconAnimation = animate(this._timeIcon);
+
+		this._sound = new AudioManager({
+			path: "resources/audio/",
+			files: {
+
+				background: {
+					volume: 0.8,
+					loop: true,
+					background: true
+				}
+			}
+		});
+		this._sound.play("background", {loop: true});				
 	};
 
 	this.reset = function(opts) {
