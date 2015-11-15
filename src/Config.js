@@ -1,12 +1,20 @@
 import device;
 
+//Reference aspect ratio as long/short
+var delta = 0.01;
+var _16x9 = 16/9;
+var _3x2 = 3/2;
+var _4x3 = 4/3;
+var ASPECT_RATIO = device.screen.height / device.screen.width;
+logger.log ("aspect ratio ", ASPECT_RATIO);
+
 var CLOUD_SCALE = 0.7;
 var BOX_SCALE = 1;
 var TILE_SCALE = 1;
 var BUTTON_SCALE = device.width / 576;
 var BG_WIDTH = 576;
 var BG_HEIGHT = 1024;
-var PLAYER_SCALE = 1;
+var PLAYER_SCALE = 2;
 var PLAYER_OFFSETX = (BG_WIDTH - 151 * PLAYER_SCALE) / 2;
 var TILE_HEIGHT = 150 * TILE_SCALE;
 var TILE_VELOCITY = 0.1;
@@ -17,10 +25,32 @@ var BOX_OFFSETY = BG_HEIGHT - BOX_HEIGHT - BOX_HEIGHT;
 var FALLING_OFFSETY = BOX_OFFSETY + BOX_HEIGHT;
 var PLAYER_OFFSETY_ADJUSTMENT = 50;
 var PLAYER_OFFSETY = BG_HEIGHT / 2 - 550 * PLAYER_SCALE + PLAYER_OFFSETY_ADJUSTMENT;
-var TILE_RELATIVEY = 150 * PLAYER_SCALE;
+var TILE_RELATIVEY = 51 * PLAYER_SCALE + 30;
 var TILE_OFFSETY = PLAYER_OFFSETY + TILE_RELATIVEY;
 var BUTTON_WIDTH = 115;
 var BUTTON_HEIGHT = 115;
+var STEP_TO_UPDATE_PARALLAX = 2;
+
+// Main Menu scale
+var mmbuttonX = (BG_WIDTH - 197) / 2;
+var mmbuttonY = BG_HEIGHT - 74 * 2;
+var mmButtonScale = 1;
+var startComboY = 187;
+
+//3:2
+if(ASPECT_RATIO < (_16x9-delta) ) {
+  logger.log ("aspect ratio less than 16:9");
+  mmbuttonX = 10;
+  mmbuttonY = startComboY;
+  mmButtonScale = 0.8;
+}
+
+//4:3
+if(ASPECT_RATIO < (_3x2-delta) ){
+  logger.log ("aspect ratio less than 3:2");
+  STEP_TO_UPDATE_PARALLAX = 1;
+}
+
 
 exports = {
   debugParallax: false,
@@ -33,10 +63,10 @@ exports = {
   tile_velocity: TILE_VELOCITY,
   falling_offsetY: FALLING_OFFSETY,
   yAdjustment: PLAYER_OFFSETY_ADJUSTMENT,
+  parallaxStep: STEP_TO_UPDATE_PARALLAX,
   gameOverDelay: 3000,
   MainMenu: {
     name: "MainMenu",
-    x: 0,
     width: BG_WIDTH,
     height: BG_HEIGHT,
     zIndex: 2000,
@@ -65,7 +95,7 @@ exports = {
         width: BG_WIDTH,
         height: 325,
         x: 0,
-        y: 187,
+        y: startComboY,
         image: "resources/images/kfc/MainMenu/ClassicCombos_able.png"         
       },
       {
@@ -91,8 +121,9 @@ exports = {
         cls: "ui.widget.ButtonView",
         width: 197,
         height: 74,
-        x: (BG_WIDTH - 197) / 2,
-        y: BG_HEIGHT - 74 * 2,
+        x: mmbuttonX,
+        y: mmbuttonY,
+        scale: mmButtonScale,
         images: {
           "up": "resources/images/kfc/MainMenu/PlayButton.png",
           "down": "resources/images/kfc/MainMenu/PlayButton.png"
@@ -492,7 +523,7 @@ exports = {
     },
 	  pinwheel: {
 	    x: PLAYER_OFFSETX,
-	    y: 400,
+	    y: 500,
   		hitOpts: {
   		  width: 151 * PLAYER_SCALE,
   		  height: 38 * PLAYER_SCALE
@@ -509,8 +540,8 @@ exports = {
   		}
 	  },
     pinwheelStick: {
-      x: (BG_WIDTH - 42 * TILE_SCALE) / 2,
-      y: 430,
+      x: (BG_WIDTH - 42 * PLAYER_SCALE) / 2,
+      y: 530,
       hitOpts: {
         width: 42 * PLAYER_SCALE,
         height: 51 * PLAYER_SCALE
