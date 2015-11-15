@@ -179,6 +179,7 @@ exports = Class(GC.Application, function(supr) {
 		if (GLOBAL.NATIVE) {
 			GLOBAL.NATIVE.onBackButton = bind(this, function() {
 				logger.log ("onBackButton clicked!!!");
+				GLOBAL.NATIVE.sendActivityToBack();
 			});
 		}
 	};
