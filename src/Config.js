@@ -152,6 +152,50 @@ exports = {
       }      
     ]
   },
+  GameOver:{
+    name: "GameOver",
+    width: BG_WIDTH,
+    height: BG_HEIGHT,
+    zIndex: 2000,
+    children: [
+      {
+        name: "gameoverbg",
+        cls: "ui.ImageView",
+        layout: 'box',
+        centerX : true,
+        centerY: true,
+        width: 465,
+        height: 330,
+        image: "resources/images/kfc/MainMenu/Pop-up contact.png"            
+      },
+      {
+        name: "gameovertxt",
+        cls: "ui.widget.ButtonView",
+        centerX: true,
+        x: 350,
+        y: 600,
+        width: 153,
+        height: 62,
+        zIndex: 5,
+        images: {
+          "up": "resources/images/kfc/MainMenu/Submit button.png",
+          "down": "resources/images/kfc/MainMenu/Submit button.png"
+        }
+      },
+      {
+        name: "gameovertxt",
+        cls: "ui.TextEditView",
+        x: 300,
+        y: 430,
+        width: 180,
+        height: 62,
+        color: "black",
+        zIndex: 5,
+        backgroundColor: "#FFFFFF",
+        prompt: "Please enter your phone number"
+      }
+    ]
+  },
   MainUI: {
     name: 'UILayout',
     x: 0,

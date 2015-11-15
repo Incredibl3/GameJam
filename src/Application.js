@@ -17,6 +17,8 @@ import ui.resource.loader as loader;
 import effects;
 import src.lib.uiInflater as uiInflater;
 
+import ui.TextEditView;
+import ui.TextPromptView;
 // game imports
 import src.Config as config;
 
@@ -141,6 +143,10 @@ exports = Class(GC.Application, function(supr) {
 		// Combo info layout
 		this.mainUI = new View(merge({ parent: this.bgLayer, zIndex: 1000, y: BG_HEIGHT - this.view.style.height }, config.MainUI));
 		uiInflater.addChildren(config.MainUI.children, this.mainUI);
+
+		this.gameoverscreen = new View(merge({ parent: this.gameOverLayer, zIndex: 1001, y: BG_HEIGHT - this.view.style.height }, config.GameOver));
+		uiInflater.addChildren(config.GameOver.children, this.gameoverscreen);
+		this.gameoverscreen.style.visible = false;
 
 		// KFC Man layout
 		this.kfcMan = new View(merge({ parent: this.bgLayer, zIndex: 1000}, config.kfcMan));
@@ -392,11 +398,12 @@ exports = Class(GC.Application, function(supr) {
 			this.model.gameOver = true;
 			app.timerView._switch_button.style.update({visible: false});
 			this.gameOverLayer.style.visible = true;
-			this.gameOverTxt.style.visible = true;
-			animate(this.gameOverTxt).now({y: (BG_HEIGHT - 345)/2}, 1000);
-			animate(this.view).wait(500).then(bind(this, function() {	
-				this._toConfirmRestart = true;
-			}));
+			this.gameoverscreen.style.visible = true;
+			// this.gameOverTxt.style.visible = true;
+			// animate(this.gameOverTxt).now({y: (BG_HEIGHT - 345)/2}, 1000);
+			// animate(this.view).wait(500).then(bind(this, function() {	
+			// 	this._toConfirmRestart = true;
+			// }));
 			app.playerEntityPool._pinwheel.view.pause();
 		}
 	};
