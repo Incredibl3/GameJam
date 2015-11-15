@@ -173,6 +173,12 @@ exports = Class(GC.Application, function(supr) {
 		this.playerEntityPool = new PlayerEntityPool({ parent: this.elementLayer });
 		this.tileObjects = new TileObjects({ parent: this.elementLayer });
 
+		// Device's back button
+		if (GLOBAL.NATIVE) {
+			GLOBAL.NATIVE.onBackButton = bind(this, function() {
+				logger.log ("onBackButton clicked!!!");
+			});
+		}
 	};
 
 	/**
@@ -513,7 +519,9 @@ var PlayerEntityPool = Class(EntityPool, function() {
 			
 			// Flash energy
 			app.kfcMan.energy.style.visible = true;
-			animate(app.kfcMan.energy).now({ visible: false }, 200);
+			animate(app.kfcMan.energy).wait(200).then(function() {
+				app.kfcMan.energy.style.visible = false;
+			});
 
 			this._pinwheel.view.startAnimation("drop", {});
 		}
