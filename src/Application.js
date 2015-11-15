@@ -36,7 +36,7 @@ var BG_HEIGHT = config.bgHeight;
 var STEP_TO_UPDATE_PARALLAX = config.parallaxStep;
 var SHOW_HIT_BOUNDS = false;
 var GAME_OVER_DELAY = config.gameOverDelay;
-var MAX_TIME = 2000;
+var MAX_TIME = 60000;
 var TIMER_WIDTH = 402;
 var TIMER_MARGIN = 0;
 var TIMER_REAL_WIDTH = TIMER_WIDTH - 2 * TIMER_MARGIN; // Remove Margin
@@ -440,10 +440,7 @@ exports = Class(GC.Application, function(supr) {
 				app._combo.reset();
 			}
 
-			this._topTile = this._activeTile;
-
-			// Add time to the time left
-			// this.timerView.addTime();
+			this._topTile = this._activeTile;			
 		} else {
 			app._combo.reset();
 		}
@@ -462,11 +459,6 @@ exports = Class(GC.Application, function(supr) {
 			app.timerView._switch_button.style.update({visible: false});
 			this.gameOverLayer.style.visible = true;
 			this.gameoverscreen.style.visible = true;
-			// this.gameOverTxt.style.visible = true;
-			// animate(this.gameOverTxt).now({y: (BG_HEIGHT - 345)/2}, 1000);
-			// animate(this.view).wait(500).then(bind(this, function() {	
-			// 	this._toConfirmRestart = true;
-			// }));
 			app.playerEntityPool._pinwheel.view.pause();
 		}
 	};
@@ -981,19 +973,6 @@ var TimerView = Class(View, function() {
 			}));
 		}));
 
-		this._timeIcon = new ImageView({
-			superview: app.bgLayer,
-			x: BG_WIDTH - 50 - 17.5,
-			y: BG_HEIGHT - 80,
-			anchorX: 17.5,
-			anchorY: 17.5, 
-			zIndex: 1000,
-			width: 35,
-			height: 35,
-			image: "resources/images/game/UI/time_icon_0001.png"
-		});
-		this._timeIconAnimation = animate(this._timeIcon);
-
 		this._sound = new AudioManager({
 			path: "resources/audio/",
 			files: {
@@ -1013,7 +992,6 @@ var TimerView = Class(View, function() {
 		this._timer_empty.style.visible = false;
 		this._timer_empty_bar.style.visible = false;
 		this._timer_number.style.visible = false;
-		this._timeIcon.style.visible = false;
 		this._timerStart = false;
 		this._intTime == -1;
 		this.setTime(MAX_TIME);
@@ -1045,15 +1023,6 @@ var TimerView = Class(View, function() {
 		this.setTime(MAX_TIME);
 		this._timer_number.setText("90");
 	};
-
-	this.addTime = function() {
-		this._timeIcon.style.visible = true;
-		this._timeIconAnimation.clear();
-		this._time += 100;
-		this._timeIconAnimation.now({scale: 2.5}, 20).wait(300).then({scale: 1}, 20).then(bind(this, function() {
-			this._timeIcon.style.visible = false;
-		}));
-	}
 });
 
 /**
