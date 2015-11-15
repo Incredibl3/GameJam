@@ -30,7 +30,7 @@ var max = Math.max;
 var MAX_TICK = config.maxTick;
 var BG_WIDTH = config.bgWidth;
 var BG_HEIGHT = config.bgHeight;
-var STEP_TO_UPDATE_PARALLAX = 2;
+var STEP_TO_UPDATE_PARALLAX = config.parallaxStep;
 var SHOW_HIT_BOUNDS = false;
 var GAME_OVER_DELAY = config.gameOverDelay;
 var MAX_TIME = 90000;
@@ -71,7 +71,8 @@ exports = Class(GC.Application, function(supr) {
 		// a 0.5 opacity dark overley at game over
 		this.gameOverLayer = new View({
 			parent: this.view,
-			y: this.view.style.height - BG_HEIGHT,
+			// y: this.view.style.height - BG_HEIGHT,
+			y: 0,
 			width: BG_WIDTH,
 			height: BG_HEIGHT,
 			zIndex: 1
@@ -120,8 +121,9 @@ exports = Class(GC.Application, function(supr) {
 
 		//Select Combo View
 		this.mainmenu = new MainMenu(merge({
-			parent: this.view,
-			y: this.view.style.height - BG_HEIGHT,
+			superview: this.view,
+			x: 0,
+			y: 0,
 		}, config.MainMenu));
 		this.mainmenu.style.visible = true;
 		uiInflater.addChildren(config.MainMenu.children, this.mainmenu);
@@ -348,8 +350,8 @@ exports = Class(GC.Application, function(supr) {
 
 			this._topTile = this._activeTile;
 
-			//Add time to the time left
-			this.timerView.addTime();
+			// Add time to the time left
+			// this.timerView.addTime();
 		} else {
 			app._combo.reset();
 		}
@@ -463,7 +465,7 @@ var PlayerEntityPool = Class(EntityPool, function() {
 		if (!app._activeTile._isFalling && app._activeTile.CanFall && !app._activeTile._isBouncingBack) {
 			app._activeTile.x = this._pinwheel.x + (BG_WIDTH - app._activeTile.view.width) / 2 - config.player_offsetX;
 		}
-		this._pinwheelStick.x = this._pinwheel.x + (this._pinwheel.width / 2) - 20 ;
+		this._pinwheelStick.x = this._pinwheel.x + (this._pinwheel.width / 2 - this._pinwheelStick.width / 2);
 		if (this._pinwheel_targetY != BG_HEIGHT) { // this means player entities should be animated up
 			this._pinwheel.y = this._pinwheel.y + (this._dotted_line.y - this._dotted_line_offsetY);
 			this._dotted_box.y = this._dotted_box.y + (this._dotted_line.y - this._dotted_line_offsetY);
@@ -796,7 +798,8 @@ var PlayerEntityPool = Class(EntityPool, function() {
   		this._zIndex--;
 
 		var offsetX = (BG_WIDTH - type.viewOpts.width) / 2 - config.player_offsetX + app.playerEntityPool._pinwheel.x;
-		var offsetY = app.playerEntityPool._pinwheel.y + config.tile_ralativeY - type.viewOpts.height / 2;
+		// var offsetY = app.playerEntityPool._pinwheel.y + config.tile_ralativeY - type.viewOpts.height / 2;
+		var offsetY = app.playerEntityPool._pinwheel.y + config.tile_ralativeY;
 		type = merge({x: offsetX, y: offsetY, viewOpts: merge({zIndex: this._zIndex}, type.viewOpts)}, type); 	
 
 		return type;
@@ -850,7 +853,7 @@ var TimerView = Class(View, function() {
 		this._timer_full = new ImageView(merge({superview: this._timer_full_parent}, config.timerView.timer_full));
 		this._timer_empty = new ImageView(merge({superview: this}, config.timerView.timer_empty));
 		this._timer_number = new ScoreView(merge({parent: this, x: 196, y: 5, zIndex: 1000}, config.timerView.number));
-		this._switch_button = new ImageView(merge({parent: app.view, x: BG_WIDTH - 105, y: 165}, config.switch_button));
+		this._switch_button = new ImageView(merge({parent: app.view, x: 0, y: 165}, config.switch_button));
 
 		this._switch_button.on("InputSelect", bind(this, function() {
 			this._switch_button.setImage("resources/images/kfc/Switch_Button.png");
