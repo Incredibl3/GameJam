@@ -144,6 +144,8 @@ exports = {
         height: 74,
         x: mmbuttonX,
         y: mmbuttonY,
+        anchorX: 98.5,
+        anchorY: 37,
         scale: mmButtonScale,
         images: {
           "up": "resources/images/kfc/MainMenu/PlayButton.png",

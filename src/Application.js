@@ -426,7 +426,6 @@ exports = Class(GC.Application, function(supr) {
 			// Check if the landed tile has the same type with the current tile of the combo
 			if(this._activeTile.name == app._combo.getCurrentMenuID())
 			{
-				console.log("Correct menu order");
 				if(app._combo.isFinishCombo())
 				{
 					var effectView = new EffectView({comboId: app._combo.id});
@@ -436,7 +435,6 @@ exports = Class(GC.Application, function(supr) {
 					app.ComboScoreView.setText(app.model.comboscore);
 				}
 			}else{
-				console.log("Not correct menu order"); 
 				app._combo.reset();
 			}
 
@@ -473,7 +471,6 @@ exports = Class(GC.Application, function(supr) {
 	};
 
 	this.ShowTutorial = function() {
-		console.log("Showing tutorial");
 		this.isShowingTutorial = true;
 		this.isHidingTut = false;
 		this.gameOverLayer.style.visible = true;
@@ -630,9 +627,13 @@ var PlayerEntityPool = Class(EntityPool, function() {
 			
 			// Flash energy
 			app.kfcMan.energy.style.visible = true;
+			app.kfcMan.character.setImage("resources/images/kfc/Character_Touched.png");
 			animate(app.kfcMan.energy).wait(200).then(function() {
 				app.kfcMan.energy.style.visible = false;
+				app.kfcMan.character.setImage("resources/images/kfc/Character_NoTouch.png");
 			});
+
+
 
 			this._pinwheel.view.startAnimation("drop", {});
 		}
@@ -746,11 +747,8 @@ var PlayerEntityPool = Class(EntityPool, function() {
  		var done = false;
  		while (!done) {
  			type = app.tileObjects.calculateOpts();	
- 			console.log("Candidate type: " + type.id);
  			var array = app._combo._menuArray;
 			for (var i = 0; i < array.length; i++) {
-				console.log("		Current Menu: " + i + " is: " + array[i].id);
-
 				if (type.id == array[i].id && type.id != this.name) done = true;
 			}
  		} 
@@ -1116,9 +1114,7 @@ var InputView = Class(View, function() {
 	};
 
 	this.onInputSelect = function(evt, pt) { 
-		console.log("onInputSelect 1111");
 		if (app.isShowingTutorial) {
-			console.log("onInputSelect");
 			app.HideTutotial();
 			return;
 		}
@@ -1170,8 +1166,6 @@ var Combo = Class(function(supr) {
 		}
 
  		for (var i = 0; i < array.length; i++) {
-			// console.log("Current Menu: " + i + " is: " + array[i].id);
-
 			var menu = "menu" + i;
 			app.mainUI.ComboMenu[menu].updateImages(array[i]);
 			if (i == 0)
@@ -1188,8 +1182,6 @@ var Combo = Class(function(supr) {
 		}	
 		menu = "menu" + this._currentMenuID;
 		app.mainUI.ComboMenu[menu].updateState("enabled");
-
-		console.log("_currentMenuID " + this._currentMenuID);
 	};
 
 	this.getCurrentMenuID = function(){
@@ -1208,7 +1200,15 @@ var MainMenu = Class(View, function() {
 		sup.init.call(this, opts);
 	};
 
+	this.animateMMButton = function() {
+		var _scale = this.mmbutton.style.scale;
+		animate(this.mmbutton).now({scale: _scale * 1.2}, 200).then({scale: _scale}).then(bind(this, function() {
+			this.animateMMButton();
+		}));
+	}
+
 	this.buildView = function() {
+		this.animateMMButton();
 		this.mmbutton.onClick = bind(this, function() {
 			animate(this).now({ opacity: 0 }, 400).then(bind(this, function() {
 				this.style.visible = false;
@@ -1274,7 +1274,7 @@ var EffectView = Class(View, function() {
 
 	this.animate = function() {
 		var srcY = this.style.y + this.style.height/2;
-		animate(this).now({width: this.maxWidth}, 1000).then({scale: 0}, 1000).then(bind(this, function() {
+		animate(this).now({width: this.maxWidth}, 1000).then({scale: 1.2}, 300).then({scale: 0}, 250).then(bind(this, function() {
 			var left_trail = app._trails.obtainView({x: this.style.x + this.style.width/2, y: srcY, zIndex: 1000, offY : 100, offX : 100});
 			left_trail.startTrailing({direction: "left"});
 
