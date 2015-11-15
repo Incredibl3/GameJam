@@ -163,7 +163,7 @@ exports = Class(GC.Application, function(supr) {
 			y: 0,
 			width: BG_WIDTH,
 			height: BG_HEIGHT,
-			image: "resources/images/kfc/Tutorial_page3.png"
+			image: "resources/images/kfc/TutorialImage.png"
 		});
 		this.tutorial.style.visible = false;
 
@@ -905,7 +905,8 @@ var TimerView = Class(View, function() {
 			this._switch_button.setImage("resources/images/kfc/Switch_Button.png");
 			animate(this._switch_button).wait(50).then(bind(this, function() {
 				this._switch_button.setImage("resources/images/kfc/Switch_Button_touched.png");
-				app._activeTile.transform();
+				if (!app._activeTile._isFalling && app._activeTile.CanFall && !app._activeTile._isBouncingBack)
+					app._activeTile.transform();
 			}));
 		}));
 

@@ -71,7 +71,7 @@ exports = {
     width: 57,
     height: 57,
     text: "00",
-    horizontalAlign: "left",
+    horizontalAlign: "center",
     spacing: -8,
     characterData: {
       "0": {image: "resources/images/kfc/score/0.png"},
