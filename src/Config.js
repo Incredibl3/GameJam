@@ -65,6 +65,27 @@ exports = {
   yAdjustment: PLAYER_OFFSETY_ADJUSTMENT,
   parallaxStep: STEP_TO_UPDATE_PARALLAX,
   gameOverDelay: 3000,
+  ComboScore: {
+    x: 149 - 65,
+    y: 157 - 65,  
+    width: 57,
+    height: 57,
+    text: "00",
+    horizontalAlign: "left",
+    spacing: -8,
+    characterData: {
+      "0": {image: "resources/images/kfc/score/0.png"},
+      "1": {image: "resources/images/kfc/score/1.png"},
+      "2": {image: "resources/images/kfc/score/2.png"},
+      "3": {image: "resources/images/kfc/score/3.png"},
+      "4": {image: "resources/images/kfc/score/4.png"},
+      "5": {image: "resources/images/kfc/score/5.png"},
+      "6": {image: "resources/images/kfc/score/6.png"},
+      "7": {image: "resources/images/kfc/score/7.png"},
+      "8": {image: "resources/images/kfc/score/8.png"},
+      "9": {image: "resources/images/kfc/score/9.png"}
+    }
+  },
   MainMenu: {
     name: "MainMenu",
     width: BG_WIDTH,
@@ -137,6 +158,9 @@ exports = {
     y: 0,
     width: 576,
     height: 250,
+    ScoreView: {
+
+    },
     children: [
       {
         name: "ComboImage",
@@ -279,7 +303,7 @@ exports = {
       xCanSpawn: false,
       xCanRelease: false,
       xVelocity: 4,
-      yMultiplier: 0.25,
+      yMultiplier: 0.4,
       yCanSpawn: true,
       yCanRelease: false,
       yGapRange: [200, 450],
@@ -300,7 +324,7 @@ exports = {
       xCanSpawn: false,
       xCanRelease: false,
       xVelocity: -4,
-      yMultiplier: 0.25,
+      yMultiplier: 0.4,
       yCanSpawn: true,
       yCanRelease: false,
       yGapRange: [200, 450],
@@ -321,7 +345,7 @@ exports = {
       xCanSpawn: false,
       xCanRelease: false,
       xVelocity: 10,
-      yMultiplier: 0.4,
+      yMultiplier: 0.25,
       yCanSpawn: true,
       yCanRelease: false,
       yGapRange: [300, 400],
@@ -342,7 +366,7 @@ exports = {
       xCanSpawn: false,
       xCanRelease: false,
       // xVelocity: -10,
-      yMultiplier: 0.4,
+      yMultiplier: 0.2,
       yCanSpawn: true,
       yCanRelease: false,
       yGapRange: [350, 550],

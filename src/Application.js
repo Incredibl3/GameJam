@@ -149,6 +149,8 @@ exports = Class(GC.Application, function(supr) {
 
 		this.heightView = new ScoreView(merge({parent: this.view, y: config.heightView.y + this.bgLayer.style.y}, config.heightView));
 
+		this.ComboScoreView = new ScoreView(merge({parent: this.mainUI}, config.ComboScore));
+
 		// Display the timer
 		this.timerView = new TimerView({ 
 			superview: this.mainUI
@@ -225,6 +227,7 @@ exports = Class(GC.Application, function(supr) {
 		};
 
 		this._combo = new Combo(config.Combo[1]);
+		this.ComboScoreView.setText(this.model.comboscore);
 		this.heightView.setText(this.model.totalheight);
 		this.heightView.style.y = config.heightView.y + this.bgLayer.style.y;
 		this.timerView.reset();
@@ -357,8 +360,11 @@ exports = Class(GC.Application, function(supr) {
 				console.log("Correct menu order");
 				if(app._combo.isFinishCombo())
 				{
+					var effectView = new EffectView({comboId: app._combo.id});
+					effectView.animate();
 					app._combo.reset();
 					app.model.comboscore++;
+					app.ComboScoreView.setText(app.model.comboscore);
 				}
 			}else{
 				console.log("Not correct menu order"); 
@@ -987,7 +993,7 @@ var TrailScore = Class(View, function(supr) {
 		this._initialW = 30;
 		this._initialH = 30;
 
-		var offY = this.style.y - (this.style.y - 50) / 4 - Math.random() * (this.style.y / 2);
+		var offY = opts.offY || this.style.y - (this.style.y - 50) / 4 - Math.random() * (this.style.y / 2);
 		animate(this).now({
 			x: (BG_WIDTH - 30)/2,
 			y: offY,
@@ -1007,9 +1013,10 @@ var TrailScore = Class(View, function(supr) {
 		} else {
 			offX = 50 + 100 * Math.random();
 		}
+		var offSetX = opts.offX || (BG_WIDTH - 30) / 2;
 		animate(this, 'curveOut')
-		.now({ x: (BG_WIDTH - 30) / 2 + offX }, 300, animate.easeOut)
-		.then({ x: (BG_WIDTH - 30) / 2}, 300, animate.easeIn);
+		.now({ x: offSetX / 2 + offX }, 300, animate.easeOut)
+		.then({ x: offSetX / 2}, 300, animate.easeIn);
 	};
 
 	this.update = function(dt) {
@@ -1154,5 +1161,70 @@ var MainMenu = Class(View, function() {
 				app.reset();
 			}));
 		});		
-	}
+	};
+});
+
+var EffectView = Class(View, function() {
+	var sup = View.prototype;
+	this.combo = "combo";
+	this.maxWidth = BG_WIDTH;
+
+	this.init = function(opts) {
+		opts.superview = app.bgLayer;
+		opts.width = 0;
+		opts.height = 291;
+		opts.x = 0;
+		opts.y = BG_HEIGHT / 2;
+		opts.anchorX = BG_WIDTH / 2;
+		opts.anchorY = this.maxWidth / 2;
+		opts.zIndex = 900;
+		opts.clip = true;
+		sup.init.call(this, opts);
+
+		this.light = new ImageView({
+			superview: this,
+			x: 0,
+			y: 0,
+			width: BG_WIDTH,
+			height: 291,
+			image: "resources/images/kfc/Effect/Light.png"
+		});
+
+		var comboImage;
+		if (opts.comboId == "classic") {
+			comboImage = "resources/images/kfc/Effect/ClassicCombo.png";
+		} else if (opts.comboId == "chickenlittles") {
+			comboImage = "resources/images/kfc/Effect/ChikenLITTLES.png";
+		} else if (opts.comboId == "combo1") {
+			comboImage = "resources/images/kfc/Effect/Combo1.png";
+		}
+		this.comboImg = new ImageView({
+			superview: this,
+			x: 0,
+			y: 20,
+			width: 418,
+			height: 422,
+			scale: 0.75,
+			image: comboImage
+		});
+
+		this.completeImg = new ImageView({
+			superview: this,
+			x: (BG_WIDTH - 383) / 2 + 110,
+			y: 10,
+			width: 383,
+			height: 255,
+			image: "resources/images/kfc/Effect/COMBOCompleted.png"			
+		});
+	};
+
+	this.animate = function() {
+		var srcY = this.style.y + this.style.height/2;
+		animate(this).now({width: this.maxWidth}, 1000).then({scale: 0}, 1000).then(bind(this, function() {
+			var left_trail = app._trails.obtainView({x: this.style.x + this.style.width/2, y: srcY, zIndex: 1000, offY : 100, offX : 100});
+			left_trail.startTrailing({direction: "left"});
+
+			this.removeFromSuperview();
+		}));
+	};
 });
